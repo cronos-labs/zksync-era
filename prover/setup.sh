@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This script sets up the necessary data needed by the CPU/GPU FRI prover to be used locally.
 
-GPU_FLAG=""
+GPU_FLAG="--features gpu"
 GENERATE_SK_COMMAND="generate-sk"
 if [ "$1" = "gpu" ]; then
     GPU_FLAG='--features gpu'
