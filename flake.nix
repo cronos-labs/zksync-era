@@ -111,7 +111,6 @@
             ./Cargo.toml
             ./core
             ./prover
-            ./sdk
             ./.github/release-please/manifest.json
           ];
         };
@@ -213,4 +212,3 @@
         };
       });
 }
-
