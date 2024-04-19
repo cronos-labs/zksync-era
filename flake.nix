@@ -29,7 +29,7 @@
   outputs = { self, nixpkgs, flake-utils, rust-overlay }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        cargoHash = "sha256-A8xrOG+NmF8dQ7tA9I2vJSNHlYxsH44ZRXdptLblCXk=";
+        cargoHash = "sha256-dhMUOdO/yGzu28P+bhExOcq52UBo3OJwyQhOB33nvww=";
 
         pkgs = import nixpkgs { inherit system; overlays = [ rust-overlay.overlays.default ]; };
 
