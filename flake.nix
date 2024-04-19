@@ -100,9 +100,8 @@
             ./Cargo.lock
             ./Cargo.toml
             ./core
-            ./sdk
-            ./.github/release-please/manifest.json
             ./prover
+            ./.github/release-please/manifest.json
           ];
         };
 
