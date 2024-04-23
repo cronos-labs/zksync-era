@@ -31,7 +31,7 @@
       let
         ###########################################################################################
         # This changes every time `Cargo.lock` changes. Set to `null` to force re-vendoring
-        cargoHash = null;
+        cargoHash = "sha256-wUzmWCcQDb+SNJAkfW4Y6u5gATOFwFWWp9V2Jd5eUqk=";
         # cargoHash = "sha256-LloF3jrvFkOlZ2lQXB+/sFthfJQLLu8BvHBE88gRvFc=";
         ###########################################################################################
         officialRelease = false;
