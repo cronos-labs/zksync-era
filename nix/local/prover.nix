@@ -69,7 +69,7 @@ let
     inherit cargoHash;
   };
 
-  rustVersion = pkgs.rust-bin.fromRustupToolchainFile (zkevm + /rust-toolchain);
+  rustVersion = pkgs.rust-bin.fromRustupToolchainFile (zkevm + /prover/rust-toolchain);
 
   stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.clangStdenv;
 
