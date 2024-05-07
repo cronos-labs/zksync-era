@@ -1,7 +1,7 @@
 let
-  zkevm = inputs.zkevm-24-0-0;
+  zkevm = inputs.zkevm-24-0-0-validium-fix;
 
-  cargoHash = "sha256-bixWhXZqAVV+E39PM6KegU9D7kVoRTzWdJNVEdu8Fl4=";
+  cargoHash = "sha256-VeTHd4wV9Adr7F672hNLvfib79R6DZTEh/CD8LEzgTE=";
 
   pkgs = import inputs.nixpkgs {
     inherit (inputs.nixpkgs) system;
