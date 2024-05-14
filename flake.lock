@@ -138,11 +138,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1714562304,
-        "narHash": "sha256-Mr3U37Rh6tH0FbaDFu0aZDwk9mPAe7ASaqDOGgLqqLU=",
+        "lastModified": 1715653339,
+        "narHash": "sha256-7lR9tpVXviSccl07GXI0+ve/natd24HAkuy1sQp0OlI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bcd44e224fd68ce7d269b4f44d24c2220fd821e7",
+        "rev": "abd6d48f8c77bea7dc51beb2adfa6ed3950d2585",
         "type": "github"
       },
       "original": {
@@ -250,7 +250,9 @@
         "rust-overlay": "rust-overlay",
         "std": "std",
         "zkevm-23-0-0": "zkevm-23-0-0",
-        "zkevm-24-0-0": "zkevm-24-0-0"
+        "zkevm-24-0-0": "zkevm-24-0-0",
+        "zkevm-24-0-0-validium-fix": "zkevm-24-0-0-validium-fix",
+        "zkevm-24-2-0": "zkevm-24-2-0"
       }
     },
     "rust-overlay": {
@@ -259,11 +261,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1714529851,
-        "narHash": "sha256-YMKJW880f7LHXVRzu93xa6Ek+QLECIu0IRQbXbzZe38=",
+        "lastModified": 1715652909,
+        "narHash": "sha256-aCLEDvzL1j51Rf2mCFOqK1mieMO3pAn5ItCIdr5h2LA=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "9ca720fdcf7865385ae3b93ecdf65f1a64cb475e",
+        "rev": "1d8fcbbfcfd3476c2665384a46ee9d07ef2b4dd9",
         "type": "github"
       },
       "original": {
@@ -313,11 +315,11 @@
         "yants": "yants"
       },
       "locked": {
-        "lastModified": 1714464955,
-        "narHash": "sha256-K0m67SmxjnvAdoH4HUK8EbCwB1paYrvix9R6dy+8+qI=",
+        "lastModified": 1715201063,
+        "narHash": "sha256-LcLYV5CDhIiJs3MfxGZFKsXPR4PtfnY4toZ75GM+2Pw=",
         "owner": "divnix",
         "repo": "std",
-        "rev": "23a1aba8256b42b00ada359d561139c8f2cc5445",
+        "rev": "b6924a7d37a46fc1dda8efe405040e27ecf1bbd6",
         "type": "github"
       },
       "original": {
@@ -392,6 +394,40 @@
       "original": {
         "owner": "cronos-labs",
         "ref": "testnet-v24.0.0",
+        "repo": "cronos-zkevm",
+        "type": "github"
+      }
+    },
+    "zkevm-24-0-0-validium-fix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1715024087,
+        "narHash": "sha256-rVvriw8U33lEhuP8YbR7n4NYHYJ5GYHhk4vLexTvqHQ=",
+        "owner": "cronos-labs",
+        "repo": "cronos-zkevm",
+        "rev": "5aa7d415d4b03efd0d9c52d36cf1a1818e23efcf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cronos-labs",
+        "ref": "testnet-v24.0.0-validium-fix",
+        "repo": "cronos-zkevm",
+        "type": "github"
+      }
+    },
+    "zkevm-24-2-0": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1715681659,
+        "narHash": "sha256-EAn3TcxGGzxkRbjU/LUvv4KgNSFaDSIhsT85ZahWBu8=",
+        "owner": "cronos-labs",
+        "repo": "cronos-zkevm",
+        "rev": "824c77df8cab00ff8ea83f32ab44323a90d92b1a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cronos-labs",
+        "ref": "testnet-v24.2.0",
         "repo": "cronos-zkevm",
         "type": "github"
       }

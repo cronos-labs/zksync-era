@@ -6,10 +6,12 @@
   inputs.zkevm-23-0-0.url = "github:cronos-labs/cronos-zkevm/testnet-23.0.0";
   inputs.zkevm-24-0-0.url = "github:cronos-labs/cronos-zkevm/testnet-v24.0.0";
   inputs.zkevm-24-0-0-validium-fix.url = "github:cronos-labs/cronos-zkevm/testnet-v24.0.0-validium-fix";
+  inputs.zkevm-24-2-0.url = "github:cronos-labs/cronos-zkevm/testnet-v24.2.0";
 
   inputs.zkevm-23-0-0.flake = false;
   inputs.zkevm-24-0-0.flake = false;
   inputs.zkevm-24-0-0-validium-fix.flake = false;
+  inputs.zkevm-24-2-0.flake = false;
 
   outputs = {
     self,

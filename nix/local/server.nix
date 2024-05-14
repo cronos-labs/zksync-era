@@ -1,7 +1,7 @@
 let
-  zkevm = inputs.zkevm-24-0-0-validium-fix;
+  zkevm = inputs.zkevm-24-2-0;
 
-  cargoHash = "sha256-VeTHd4wV9Adr7F672hNLvfib79R6DZTEh/CD8LEzgTE=";
+  cargoHash = "sha256-rqz3WEDf/4MMroCKIR1rx0L1J1KuqZ/o/bh0PRns4bY=";
 
   pkgs = import inputs.nixpkgs {
     inherit (inputs.nixpkgs) system;
@@ -111,6 +111,9 @@ let
       buildInputs = [
         libclang
         openssl
+        snappy.dev
+        lz4.dev
+        bzip2.dev
       ];
 
       inherit src;
