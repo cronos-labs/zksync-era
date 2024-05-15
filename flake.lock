@@ -418,11 +418,11 @@
     "zkevm-24-2-0": {
       "flake": false,
       "locked": {
-        "lastModified": 1715761307,
-        "narHash": "sha256-iBUD/iTqZhoNyNq3nsEvgz0/qRcht+hIjfr2WR44A8k=",
+        "lastModified": 1715762208,
+        "narHash": "sha256-LzcmrbcNlSdtm89q8nq9TlZX0sJxJWn9ieHkmu4B/nA=",
         "owner": "cronos-labs",
         "repo": "cronos-zkevm",
-        "rev": "5fb92cd346f702a3b50d72195ab194f8c7ce4445",
+        "rev": "88fc8430b5761887f756ef09e6dba1a844b49b44",
         "type": "github"
       },
       "original": {
