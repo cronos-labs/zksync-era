@@ -436,11 +436,11 @@
     "zkevm-24-2-0-fix-eth-sender": {
       "flake": false,
       "locked": {
-        "lastModified": 1716284511,
-        "narHash": "sha256-xOXvN6EPQtvX6xepXBOuKZCvPhyc3C/Yofrwr5T14vE=",
+        "lastModified": 1716284928,
+        "narHash": "sha256-pi6d1Lh8DTiM3JaxEnWEoO7P71T+A1QROW/tlGeAjnc=",
         "owner": "cronos-labs",
         "repo": "cronos-zkevm",
-        "rev": "c4ab51b974a98b5f367a51830476b64a7140e290",
+        "rev": "3859433cdb20ca997d00e04f676d0d67f6c1f10b",
         "type": "github"
       },
       "original": {
