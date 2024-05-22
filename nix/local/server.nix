@@ -1,7 +1,7 @@
 let
   zkevm = inputs.zkevm-24-2-0-add-log-seal-criteria;
 
-  cargoHash = "sha256-rqz3WEDf/4MMroCKIR1rx0L1J1KuqZ/o/bh0PRns4bY=";
+  cargoHash = "sha256-/S5zOQTZtGLhzKNz/hS7cP808jZmAU6G2F7hNgx9PLU=";
 
   pkgs = import inputs.nixpkgs {
     inherit (inputs.nixpkgs) system;
