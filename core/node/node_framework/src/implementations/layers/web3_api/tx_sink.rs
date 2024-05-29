@@ -45,7 +45,7 @@ impl WiringLayer for TxSinkLayer {
             }
             TxSinkLayer::DenyListPoolSink { deny_list } => {
                 let pool = context
-                    .get_resource::<MasterPoolResource>()
+                    .get_resource::<PoolResource<MasterPool>>()
                     .await?
                     .get()
                     .await?;

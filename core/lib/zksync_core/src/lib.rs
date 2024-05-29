@@ -12,7 +12,6 @@ use anyhow::Context as _;
 use api_server::tx_sender::{
     deny_list_pool_sink::DenyListPoolSink, master_pool_sink::MasterPoolSink,
 };
-use fee_model::{ApiFeeInputProvider, BatchFeeModelInputProvider, MainNodeFeeInputProvider};
 use prometheus_exporter::PrometheusExporterConfig;
 use prover_dal::Prover;
 use temp_config_store::Secrets;
