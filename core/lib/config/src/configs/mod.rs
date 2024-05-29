@@ -18,6 +18,7 @@ pub use self::{
     observability::{ObservabilityConfig, OpentelemetryConfig},
     proof_data_handler::ProofDataHandlerConfig,
     snapshots_creator::SnapshotsCreatorConfig,
+    tx_sink::TxSinkConfig,
     utils::PrometheusConfig,
 };
 
@@ -43,6 +44,7 @@ pub mod object_store;
 pub mod observability;
 pub mod proof_data_handler;
 pub mod snapshots_creator;
+pub mod tx_sink;
 pub mod utils;
 pub mod wallets;
 
