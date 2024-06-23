@@ -4,6 +4,6 @@ mod http;
 mod mock;
 
 pub use self::{
-    http::{PKSigningClient, QueryClient, SigningClient},
+    http::{GKMSSigningClient, PKSigningClient, QueryClient, SigningClient},
     mock::MockEthereum,
 };

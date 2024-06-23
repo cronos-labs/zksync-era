@@ -2,7 +2,9 @@ use std::{fmt, sync::Arc};
 
 use async_trait::async_trait;
 use zksync_contracts::hyperchain_contract;
-use zksync_eth_signer::{EthereumSigner, PrivateKeySigner, TransactionParameters};
+use zksync_eth_signer::{
+    g_kms_signer::GKMSSigner, EthereumSigner, PrivateKeySigner, TransactionParameters,
+};
 use zksync_types::{
     ethabi, web3, Address, K256PrivateKey, L1ChainId, EIP_4844_TX_TYPE, H160, U256,
 };
@@ -31,6 +33,29 @@ impl PKSigningClient {
             query_client,
             hyperchain_contract(),
             operator_address,
+            signer,
+            diamond_proxy_addr,
+            default_priority_fee_per_gas.into(),
+            l1_chain_id,
+        )
+    }
+}
+
+pub type GKMSSigningClient = SigningClient<GKMSSigner>;
+
+impl GKMSSigningClient {
+    pub async fn new_raw(
+        diamond_proxy_addr: Address,
+        default_priority_fee_per_gas: u64,
+        l1_chain_id: L1ChainId,
+        query_client: Box<dyn EthInterface>,
+        key_name: String,
+    ) -> Self {
+        let signer = GKMSSigner::new(key_name, l1_chain_id.0).await.unwrap();
+        SigningClient::new(
+            query_client,
+            hyperchain_contract(),
+            Address::default(),
             signer,
             diamond_proxy_addr,
             default_priority_fee_per_gas.into(),

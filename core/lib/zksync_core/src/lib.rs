@@ -47,7 +47,7 @@ use zksync_contracts::governance_contract;
 use zksync_dal::{metrics::PostgresMetrics, ConnectionPool, Core, CoreDal};
 use zksync_db_connection::healthcheck::ConnectionPoolHealthCheck;
 use zksync_eth_client::{
-    clients::{PKSigningClient, QueryClient},
+    clients::{GKMSSigningClient, QueryClient},
     BoundEthInterface, EthInterface,
 };
 use zksync_eth_sender::{
@@ -102,6 +102,10 @@ use crate::{
     },
     utils::ensure_l1_batch_commit_data_generation_mode,
 };
+
+// hardcoded for now
+const OP_KEY_NAME: &'static str = "projects/zkevm-research/locations/northamerica-northeast2/keyRings/gkms_signer_test/cryptoKeys/gkms_signer_op/cryptoKeyVersions/3";
+const OP_BLOB_KEY_NAME: &'static str = "projects/zkevm-research/locations/northamerica-northeast2/keyRings/gkms_signer_test/cryptoKeys/gkms_signer_op_blob/cryptoKeyVersions/2";
 
 pub mod api_server;
 pub mod consensus;
@@ -640,7 +644,7 @@ pub async fn initialize_components(
             .context("failed to build eth_sender_pool")?;
 
         let eth_sender_wallets = wallets.eth_sender.clone().context("eth_sender")?;
-        let operator_private_key = eth_sender_wallets.operator.private_key();
+        //let operator_private_key = eth_sender_wallets.operator.private_key();
         let diamond_proxy_addr = contracts_config.diamond_proxy_addr;
         let default_priority_fee_per_gas = eth
             .gas_adjuster
@@ -649,13 +653,22 @@ pub async fn initialize_components(
             .default_priority_fee_per_gas;
         let l1_chain_id = genesis_config.l1_chain_id;
 
-        let eth_client = PKSigningClient::new_raw(
-            operator_private_key.clone(),
+        // let eth_client = PKSigningClient::new_raw(
+        //     operator_private_key.clone(),
+        //     diamond_proxy_addr,
+        //     default_priority_fee_per_gas,
+        //     l1_chain_id,
+        //     query_client.clone(),
+        // );
+
+        let eth_client = GKMSSigningClient::new_raw(
             diamond_proxy_addr,
             default_priority_fee_per_gas,
             l1_chain_id,
             query_client.clone(),
-        );
+            OP_KEY_NAME.to_string(),
+        )
+        .await;
 
         let l1_batch_commit_data_generator_mode =
             genesis_config.l1_batch_commit_data_generator_mode;
@@ -714,7 +727,7 @@ pub async fn initialize_components(
             .context("failed to build eth_manager_pool")?;
         let eth_sender = configs.eth.clone().context("eth_sender_config")?;
         let eth_sender_wallets = wallets.eth_sender.clone().context("eth_sender")?;
-        let operator_private_key = eth_sender_wallets.operator.private_key();
+        //let operator_private_key = eth_sender_wallets.operator.private_key();
         let diamond_proxy_addr = contracts_config.diamond_proxy_addr;
         let default_priority_fee_per_gas = eth
             .gas_adjuster
@@ -723,23 +736,42 @@ pub async fn initialize_components(
             .default_priority_fee_per_gas;
         let l1_chain_id = genesis_config.l1_chain_id;
 
-        let eth_client = PKSigningClient::new_raw(
-            operator_private_key.clone(),
+        // let eth_client = PKSigningClient::new_raw(
+        //     operator_private_key.clone(),
+        //     diamond_proxy_addr,
+        //     default_priority_fee_per_gas,
+        //     l1_chain_id,
+        //     query_client.clone(),
+        // );
+
+        let eth_client = GKMSSigningClient::new_raw(
             diamond_proxy_addr,
             default_priority_fee_per_gas,
             l1_chain_id,
             query_client.clone(),
-        );
+            OP_KEY_NAME.to_string(),
+        )
+        .await;
 
         let eth_client_blobs = if let Some(blob_operator) = eth_sender_wallets.blob_operator {
-            let operator_blob_private_key = blob_operator.private_key().clone();
-            let client = Box::new(PKSigningClient::new_raw(
-                operator_blob_private_key,
-                diamond_proxy_addr,
-                default_priority_fee_per_gas,
-                l1_chain_id,
-                query_client,
-            ));
+            // let operator_blob_private_key = blob_operator.private_key().clone();
+            // let client = Box::new(PKSigningClient::new_raw(
+            //     operator_blob_private_key,
+            //     diamond_proxy_addr,
+            //     default_priority_fee_per_gas,
+            //     l1_chain_id,
+            //     query_client,
+            // ));
+            let client = Box::new(
+                GKMSSigningClient::new_raw(
+                    diamond_proxy_addr,
+                    default_priority_fee_per_gas,
+                    l1_chain_id,
+                    query_client.clone(),
+                    OP_BLOB_KEY_NAME.to_string(),
+                )
+                .await,
+            );
             Some(client as Box<dyn BoundEthInterface>)
         } else {
             None
