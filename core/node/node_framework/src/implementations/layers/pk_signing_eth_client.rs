@@ -95,7 +95,11 @@ impl WiringLayer for PKSigningEthClientLayer {
                     .as_ref()
                     .context("gas_adjuster config is missing")?;
 
-                let key_name = "projects/zkevm-research/locations/northamerica-northeast2/keyRings/gkms_signer_test/cryptoKeys/gkms_signer_test".to_string();
+                let gkms_op_key_name = std::env::var("GOOGLE_KMS_OP_KEY_NAME").ok();
+                tracing::info!(
+                    "KMS op key name: {:?}",
+                    std::env::var("GOOGLE_KMS_OP_KEY_NAME")
+                );
 
                 let EthInterfaceResource(query_client) = context.get_resource().await?;
 
@@ -104,18 +108,28 @@ impl WiringLayer for PKSigningEthClientLayer {
                     gas_adjuster_config.default_priority_fee_per_gas,
                     self.l1_chain_id,
                     query_client.clone(),
-                    key_name.clone(),
+                    gkms_op_key_name
+                        .expect("gkms_op_key_name is required but was None")
+                        .to_string(),
                 )
                 .await;
                 context.insert_resource(BoundEthInterfaceResource(Box::new(signing_client)))?;
 
-                if let Some(_blob_operator) = &self.wallets.blob_operator {
+                let gkms_op_blob_key_name = std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME").ok();
+                tracing::info!(
+                    "KMS op blob key name: {:?}",
+                    std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME")
+                );
+
+                if gkms_op_blob_key_name.is_some() {
                     let signing_client_for_blobs = GKMSSigningClient::new_raw(
                         self.contracts_config.diamond_proxy_addr,
                         gas_adjuster_config.default_priority_fee_per_gas,
                         self.l1_chain_id,
                         query_client,
-                        key_name,
+                        gkms_op_blob_key_name
+                            .expect("gkms_op_blob_key_name is required but was None")
+                            .to_string(),
                     )
                     .await;
                     context.insert_resource(BoundEthInterfaceForBlobsResource(Box::new(

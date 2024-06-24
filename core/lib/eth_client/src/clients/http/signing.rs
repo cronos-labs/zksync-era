@@ -55,12 +55,16 @@ impl GKMSSigningClient {
         SigningClient::new(
             query_client,
             hyperchain_contract(),
-            Address::default(),
+            signer.get_address().await.unwrap(),
             signer,
             diamond_proxy_addr,
             default_priority_fee_per_gas.into(),
             l1_chain_id,
         )
+    }
+
+    pub fn get_address(&self) -> Address {
+        self.inner.sender_account
     }
 }
 
