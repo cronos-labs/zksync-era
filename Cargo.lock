@@ -9169,6 +9169,7 @@ dependencies = [
  "async-trait",
  "ethers-signers",
  "google-cloud-auth 0.15.0",
+ "google-cloud-gax",
  "google-cloud-kms",
  "hex",
  "rlp",

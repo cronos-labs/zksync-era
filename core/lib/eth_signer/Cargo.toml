@@ -16,6 +16,7 @@ thiserror.workspace = true
 async-trait.workspace = true
 google-cloud-kms = { git="https://github.com/yoshidan/google-cloud-rust.git", rev="eb15032", features=["eth"]}
 google-cloud-auth = { git="https://github.com/yoshidan/google-cloud-rust.git", rev="eb15032"}
+google-cloud-gax = { git="https://github.com/yoshidan/google-cloud-rust.git", rev="eb15032"}
 hex = "0.4.3"
 tracing = "0.1"
 ethers-signers = { version = "2.0"}

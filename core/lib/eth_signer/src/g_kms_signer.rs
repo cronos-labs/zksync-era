@@ -2,6 +2,7 @@ use std::result::Result;
 
 use ethers_signers::Signer as EthSigner;
 use google_cloud_auth::credentials::CredentialsFile;
+use google_cloud_gax::retry::RetrySetting;
 use google_cloud_kms::{
     client::{google_cloud_auth, Client, ClientConfig},
     signer::ethereum::Signer,
@@ -49,7 +50,7 @@ impl GKMSSigner {
             .await
             .map_err(|e| SignerError::SigningFailed(e.to_string()))?;
 
-        let signer = Signer::new(client, &key_name, _chain_id, None)
+        let signer = Signer::new(client, &key_name, _chain_id, Some(RetrySetting::default()))
             .await
             .map_err(|e| SignerError::SigningFailed(e.to_string()))?;
 
