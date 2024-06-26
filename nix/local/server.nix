@@ -1,5 +1,5 @@
 let
-  zkevm = inputs.zkevm-24-2-0-add-log-seal-criteria;
+  zkevm = inputs.zkevm-24-2-0;
 
   cargoHash = "sha256-/S5zOQTZtGLhzKNz/hS7cP808jZmAU6G2F7hNgx9PLU=";
 
