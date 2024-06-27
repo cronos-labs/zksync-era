@@ -19,7 +19,7 @@ google-cloud-auth = { git="https://github.com/yoshidan/google-cloud-rust.git", r
 google-cloud-gax = { git="https://github.com/yoshidan/google-cloud-rust.git", rev="eb15032"}
 hex = "0.4.3"
 tracing = "0.1"
-ethers-signers = { version = "2.0"}
+ethers-signers = "2.0"
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["full"] }
