@@ -655,9 +655,9 @@ pub async fn initialize_components(
         let use_gkms_signing_client = gkms_op_key_name.is_some();
 
         if use_gkms_signing_client {
-            tracing::info!("Using PKSigningClient");
-        } else {
             tracing::info!("Using KMSSigningClient");
+        } else {
+            tracing::info!("Using PKSSigningClient");
         }
 
         let eth_tx_aggregator_actor = if use_gkms_signing_client {
@@ -806,9 +806,9 @@ pub async fn initialize_components(
         let gkms_op_key_name = std::env::var(GOOGLE_KMS_OP_KEY_NAME).ok();
         let use_gkms_signing_client = gkms_op_key_name.is_some();
         if use_gkms_signing_client {
-            tracing::info!("Using PKSigningClient");
-        } else {
             tracing::info!("Using KMSSigningClient");
+        } else {
+            tracing::info!("Using PKSSigningClient");
         }
 
         let eth_tx_manager_actor = if use_gkms_signing_client {
