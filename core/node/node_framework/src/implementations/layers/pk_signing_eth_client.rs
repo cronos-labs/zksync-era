@@ -55,7 +55,7 @@ impl WiringLayer for PKSigningEthClientLayer {
     }
 
     async fn wire(self: Box<Self>, mut context: ServiceContext<'_>) -> Result<(), WiringError> {
-        let _signing_client = match self.as_ref().client_type {
+        match self.as_ref().client_type {
             SigningEthClientType::PKSigningEthClient => {
                 let private_key = self.wallets.operator.private_key();
                 let gas_adjuster_config = self
@@ -121,21 +121,19 @@ impl WiringLayer for PKSigningEthClientLayer {
                     std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME")
                 );
 
-                if gkms_op_blob_key_name.is_some() {
+                if let Some(key_name) = gkms_op_blob_key_name {
                     let signing_client_for_blobs = GKMSSigningClient::new_raw(
                         self.contracts_config.diamond_proxy_addr,
                         gas_adjuster_config.default_priority_fee_per_gas,
                         self.l1_chain_id,
                         query_client,
-                        gkms_op_blob_key_name
-                            .expect("gkms_op_blob_key_name is required but was None")
-                            .to_string(),
+                        key_name.to_string(),
                     )
                     .await;
                     context.insert_resource(BoundEthInterfaceForBlobsResource(Box::new(
                         signing_client_for_blobs,
                     )))?;
-                }
+                };
             }
         };
 

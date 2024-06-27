@@ -56,6 +56,7 @@ use zksync_eth_sender::{
     },
     Aggregator, EthTxAggregator, EthTxManager,
 };
+use zksync_eth_signer::g_kms_signer::{GOOGLE_KMS_OP_BLOB_KEY_NAME, GOOGLE_KMS_OP_KEY_NAME};
 use zksync_eth_watch::{EthHttpQueryClient, EthWatch};
 use zksync_health_check::{AppHealthCheck, HealthStatus, ReactiveHealthCheck};
 use zksync_house_keeper::{
@@ -648,16 +649,18 @@ pub async fn initialize_components(
             .default_priority_fee_per_gas;
         let l1_chain_id = genesis_config.l1_chain_id;
 
-        let gkms_op_key_name = std::env::var("GOOGLE_KMS_OP_KEY_NAME").ok();
-        tracing::info!(
-            "KMS op key name: {:?}",
-            std::env::var("GOOGLE_KMS_OP_KEY_NAME")
-        );
+        let gkms_op_key_name = std::env::var(GOOGLE_KMS_OP_KEY_NAME).ok();
+        tracing::info!("KMS op key name: {:?}", gkms_op_key_name);
 
         let use_gkms_signing_client = gkms_op_key_name.is_some();
 
-        let eth_tx_aggregator_actor;
         if use_gkms_signing_client {
+            tracing::info!("Using PKSigningClient");
+        } else {
+            tracing::info!("Using KMSSigningClient");
+        }
+
+        let eth_tx_aggregator_actor = if use_gkms_signing_client {
             let eth_client = GKMSSigningClient::new_raw(
                 diamond_proxy_addr,
                 default_priority_fee_per_gas,
@@ -688,20 +691,15 @@ pub async fn initialize_components(
                     }
                 };
 
-            let gkms_op_blob_key_name = std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME").ok();
-            tracing::info!(
-                "KMS op blob key name: {:?}",
-                std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME")
-            );
-            let operator_blobs_address = if gkms_op_blob_key_name.is_some() {
+            let gkms_op_blob_key_name = std::env::var(GOOGLE_KMS_OP_BLOB_KEY_NAME).ok();
+            tracing::info!("KMS op blob key name: {:?}", gkms_op_blob_key_name);
+            let operator_blobs_address = if let Some(key_name) = gkms_op_blob_key_name {
                 let eth_blob_client = GKMSSigningClient::new_raw(
                     diamond_proxy_addr,
                     default_priority_fee_per_gas,
                     l1_chain_id,
                     query_client.clone(),
-                    gkms_op_blob_key_name
-                        .expect("gkms_op_blob_key_name is required but was None")
-                        .to_string(),
+                    key_name.to_string(),
                 )
                 .await;
 
@@ -711,7 +709,7 @@ pub async fn initialize_components(
             };
 
             let sender_config = eth.sender.clone().context("eth_sender")?;
-            eth_tx_aggregator_actor = EthTxAggregator::new(
+            EthTxAggregator::new(
                 eth_sender_pool,
                 sender_config.clone(),
                 Aggregator::new(
@@ -728,7 +726,7 @@ pub async fn initialize_components(
                 operator_blobs_address,
                 l1_batch_commit_data_generator,
             )
-            .await;
+            .await
         } else {
             let eth_client = PKSigningClient::new_raw(
                 operator_private_key.clone(),
@@ -760,7 +758,7 @@ pub async fn initialize_components(
             let operator_blobs_address = eth_sender_wallets.blob_operator.map(|x| x.address());
 
             let sender_config = eth.sender.clone().context("eth_sender")?;
-            eth_tx_aggregator_actor = EthTxAggregator::new(
+            EthTxAggregator::new(
                 eth_sender_pool,
                 sender_config.clone(),
                 Aggregator::new(
@@ -777,8 +775,8 @@ pub async fn initialize_components(
                 operator_blobs_address,
                 l1_batch_commit_data_generator,
             )
-            .await;
-        }
+            .await
+        };
 
         task_futures.push(tokio::spawn(
             eth_tx_aggregator_actor.run(stop_receiver.clone()),
@@ -805,11 +803,15 @@ pub async fn initialize_components(
             .default_priority_fee_per_gas;
         let l1_chain_id = genesis_config.l1_chain_id;
 
-        let gkms_op_key_name = std::env::var("GOOGLE_KMS_OP_KEY_NAME").ok();
+        let gkms_op_key_name = std::env::var(GOOGLE_KMS_OP_KEY_NAME).ok();
         let use_gkms_signing_client = gkms_op_key_name.is_some();
-
-        let eth_tx_manager_actor;
         if use_gkms_signing_client {
+            tracing::info!("Using PKSigningClient");
+        } else {
+            tracing::info!("Using KMSSigningClient");
+        }
+
+        let eth_tx_manager_actor = if use_gkms_signing_client {
             let eth_client = GKMSSigningClient::new_raw(
                 diamond_proxy_addr,
                 default_priority_fee_per_gas,
@@ -821,17 +823,15 @@ pub async fn initialize_components(
             )
             .await;
 
-            let gkms_op_blob_key_name = std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME").ok();
-            let eth_client_blobs = if gkms_op_blob_key_name.is_some() {
+            let gkms_op_blob_key_name = std::env::var(GOOGLE_KMS_OP_BLOB_KEY_NAME).ok();
+            let eth_client_blobs = if let Some(key_name) = gkms_op_blob_key_name {
                 let client = Box::new(
                     GKMSSigningClient::new_raw(
                         diamond_proxy_addr,
                         default_priority_fee_per_gas,
                         l1_chain_id,
                         query_client.clone(),
-                        gkms_op_blob_key_name
-                            .expect("gkms_op_blob_key_name is required but was None")
-                            .to_string(),
+                        key_name.to_string(),
                     )
                     .await,
                 );
@@ -840,7 +840,7 @@ pub async fn initialize_components(
                 None
             };
 
-            eth_tx_manager_actor = EthTxManager::new(
+            EthTxManager::new(
                 eth_manager_pool,
                 eth_sender.sender.clone().context("eth_sender")?,
                 gas_adjuster
@@ -849,7 +849,7 @@ pub async fn initialize_components(
                     .context("gas_adjuster.get_or_init()")?,
                 Box::new(eth_client),
                 eth_client_blobs,
-            );
+            )
         } else {
             let operator_private_key = eth_sender_wallets.operator.private_key();
             let eth_client = PKSigningClient::new_raw(
@@ -873,7 +873,7 @@ pub async fn initialize_components(
                 None
             };
 
-            eth_tx_manager_actor = EthTxManager::new(
+            EthTxManager::new(
                 eth_manager_pool,
                 eth_sender.sender.clone().context("eth_sender")?,
                 gas_adjuster
@@ -882,8 +882,8 @@ pub async fn initialize_components(
                     .context("gas_adjuster.get_or_init()")?,
                 Box::new(eth_client),
                 eth_client_blobs,
-            );
-        }
+            )
+        };
 
         task_futures.extend([tokio::spawn(
             eth_tx_manager_actor.run(stop_receiver.clone()),
