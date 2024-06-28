@@ -30,11 +30,12 @@ pub struct GKMSSigner {
 
 impl GKMSSigner {
     pub async fn new(key_name: String, _chain_id: u64) -> Result<Self, SignerError> {
-        let credentials_path = std::env::var("GOOGLE_APPLICATION_CREDENTIALS").map_err(|_| {
-            SignerError::SigningFailed(
-                "Environment variable GOOGLE_APPLICATION_CREDENTIALS not found".to_string(),
-            )
-        })?;
+        let credentials_path =
+            std::env::var(GOOGLE_APPLICATION_CREDENTIALS_PATH).map_err(|_| {
+                SignerError::SigningFailed(
+                    "Environment variable GOOGLE_APPLICATION_CREDENTIALS not found".to_string(),
+                )
+            })?;
 
         tracing::info!(
             "KMS signer credentail path: {:?}",
