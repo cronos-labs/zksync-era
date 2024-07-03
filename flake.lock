@@ -118,13 +118,30 @@
         "type": "github"
       }
     },
+    "ml-zksync-24-3-0": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1715927686,
+        "narHash": "sha256-HryjFuzWvokL1KVXHx8oM8dsyEZxrbYdM2hF75trYR8=",
+        "owner": "matter-labs",
+        "repo": "zksync-era",
+        "rev": "0cbcab3494e3043ab70e8059a72640fed9c4fef4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "matter-labs",
+        "ref": "core-v24.3.0",
+        "repo": "zksync-era",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1719317636,
-        "narHash": "sha256-bu0xbu2Z6DDzA9LGV81yJunIti6r7tjUImeR8orAL/I=",
+        "lastModified": 1719931832,
+        "narHash": "sha256-0LD+KePCKKEb4CcPsTBOwf019wDtZJanjoKm1S8q3Do=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9c513fc6fb75142f6aec6b7545cb8af2236b80f5",
+        "rev": "0aeab749216e4c073cece5d34bc01b79e717c3e0",
         "type": "github"
       },
       "original": {
@@ -228,6 +245,7 @@
     },
     "root": {
       "inputs": {
+        "ml-zksync-24-3-0": "ml-zksync-24-3-0",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
         "std": "std",
@@ -243,11 +261,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1719281921,
-        "narHash": "sha256-LIBMfhM9pMOlEvBI757GOK5l0R58SRi6YpwfYMbf4yc=",
+        "lastModified": 1719973106,
+        "narHash": "sha256-IGCdN/m7DfwUfxZjFnlTiTtpwSHCb01P/LWavAKD2jw=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "b6032d3a404d8a52ecfc8571ff0c26dfbe221d07",
+        "rev": "fb733500aead50880b9b301f34a0061bf997d6f2",
         "type": "github"
       },
       "original": {
@@ -385,11 +403,11 @@
     "zkevm-24-2-0": {
       "flake": false,
       "locked": {
-        "lastModified": 1719286703,
-        "narHash": "sha256-eD7zyZ4z4UA6r6+l62cMijDfc4OdMxglG0mD+D7nl7g=",
+        "lastModified": 1719799319,
+        "narHash": "sha256-cOADm8advJ64Ge5fDlZ5lIfdujLYhbZg2r+Z3Dnfevc=",
         "owner": "cronos-labs",
         "repo": "cronos-zkevm",
-        "rev": "a2ddbdc4171d44ffea92bc81728edd5a104ede83",
+        "rev": "91740ac8221560fd680d09d38e64b982e7353933",
         "type": "github"
       },
       "original": {
