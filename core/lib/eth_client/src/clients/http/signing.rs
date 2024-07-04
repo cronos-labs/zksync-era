@@ -51,7 +51,11 @@ impl GKMSSigningClient {
         query_client: Box<dyn EthInterface>,
         key_name: String,
     ) -> Self {
-        let signer = GKMSSigner::new(key_name, l1_chain_id.0).await.unwrap();
+        let signer = match GKMSSigner::new(key_name, l1_chain_id.0).await {
+            Ok(s) => s,
+            Err(e) => panic!("Failed to create GKMSSigner: {:?}", e),
+        };
+
         SigningClient::new(
             query_client,
             hyperchain_contract(),
