@@ -2658,8 +2658,8 @@ dependencies = [
 
 [[package]]
 name = "google-cloud-auth"
-version = "0.15.0"
-source = "git+https://github.com/yoshidan/google-cloud-rust.git?rev=eb15032#eb15032a490fe9ce6da328ec3cf0520cd6f0fafd"
+version = "0.16.0"
+source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "async-trait",
  "base64 0.21.5",
@@ -2679,8 +2679,8 @@ dependencies = [
 
 [[package]]
 name = "google-cloud-gax"
-version = "0.17.0"
-source = "git+https://github.com/yoshidan/google-cloud-rust.git?rev=eb15032#eb15032a490fe9ce6da328ec3cf0520cd6f0fafd"
+version = "0.18.0"
+source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "google-cloud-token 0.1.2",
  "http 0.2.9",
@@ -2694,8 +2694,8 @@ dependencies = [
 
 [[package]]
 name = "google-cloud-googleapis"
-version = "0.13.0"
-source = "git+https://github.com/yoshidan/google-cloud-rust.git?rev=eb15032#eb15032a490fe9ce6da328ec3cf0520cd6f0fafd"
+version = "0.14.0"
+source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "prost 0.12.1",
  "prost-types",
@@ -2704,13 +2704,13 @@ dependencies = [
 
 [[package]]
 name = "google-cloud-kms"
-version = "0.2.0"
-source = "git+https://github.com/yoshidan/google-cloud-rust.git?rev=eb15032#eb15032a490fe9ce6da328ec3cf0520cd6f0fafd"
+version = "0.3.0"
+source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "async-trait",
  "ethers-core",
  "ethers-signers",
- "google-cloud-auth 0.15.0",
+ "google-cloud-auth 0.16.0",
  "google-cloud-gax",
  "google-cloud-googleapis",
  "google-cloud-token 0.1.2",
@@ -2736,7 +2736,7 @@ dependencies = [
 [[package]]
 name = "google-cloud-metadata"
 version = "0.5.0"
-source = "git+https://github.com/yoshidan/google-cloud-rust.git?rev=eb15032#eb15032a490fe9ce6da328ec3cf0520cd6f0fafd"
+source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "reqwest 0.12.4",
  "thiserror",
@@ -2786,7 +2786,7 @@ dependencies = [
 [[package]]
 name = "google-cloud-token"
 version = "0.1.2"
-source = "git+https://github.com/yoshidan/google-cloud-rust.git?rev=eb15032#eb15032a490fe9ce6da328ec3cf0520cd6f0fafd"
+source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "async-trait",
 ]
@@ -9168,7 +9168,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "ethers-signers",
- "google-cloud-auth 0.15.0",
+ "google-cloud-auth 0.16.0",
  "google-cloud-gax",
  "google-cloud-kms",
  "hex",
