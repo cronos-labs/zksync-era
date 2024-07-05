@@ -15,7 +15,6 @@ rlp.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
 google-cloud-kms = { git="https://github.com/yoshidan/google-cloud-rust.git", tag="v20240627", features=["eth"]}
-google-cloud-auth = { git="https://github.com/yoshidan/google-cloud-rust.git", tag="v20240627"}
 google-cloud-gax = { git="https://github.com/yoshidan/google-cloud-rust.git", tag="v20240627"}
 hex = "0.4.3"
 tracing = "0.1"

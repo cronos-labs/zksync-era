@@ -9168,7 +9168,6 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "ethers-signers",
- "google-cloud-auth 0.16.0",
  "google-cloud-gax",
  "google-cloud-kms",
  "hex",

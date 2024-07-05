@@ -1,10 +1,9 @@
 use std::result::Result;
 
 use ethers_signers::Signer as EthSigner;
-use google_cloud_auth::credentials::CredentialsFile;
 use google_cloud_gax::retry::RetrySetting;
 use google_cloud_kms::{
-    client::{google_cloud_auth, Client, ClientConfig},
+    client::{Client, ClientConfig},
     signer::ethereum::Signer,
 };
 use hex;
@@ -19,7 +18,6 @@ use crate::{
     EthereumSigner, SignerError,
 };
 
-const GOOGLE_APPLICATION_CREDENTIALS_PATH: &str = "GOOGLE_APPLICATION_CREDENTIALS";
 pub const GOOGLE_KMS_OP_KEY_NAME: &str = "GOOGLE_KMS_OP_KEY_NAME";
 pub const GOOGLE_KMS_OP_BLOB_KEY_NAME: &str = "GOOGLE_KMS_OP_BLOB_KEY_NAME";
 
@@ -30,24 +28,8 @@ pub struct GKMSSigner {
 
 impl GKMSSigner {
     pub async fn new(key_name: String, _chain_id: u64) -> Result<Self, SignerError> {
-        let credentials_path =
-            std::env::var(GOOGLE_APPLICATION_CREDENTIALS_PATH).map_err(|_| {
-                SignerError::SigningFailed(
-                    "Environment variable GOOGLE_APPLICATION_CREDENTIALS not found".to_string(),
-                )
-            })?;
-
-        tracing::info!(
-            "KMS signer credentail path: {:?}",
-            std::env::var(GOOGLE_APPLICATION_CREDENTIALS_PATH)
-        );
-
-        let cf = CredentialsFile::new_from_file(credentials_path)
-            .await
-            .map_err(|e| SignerError::SigningFailed(e.to_string()))?;
-
         let config = ClientConfig::default()
-            .with_credentials(cf)
+            .with_auth()
             .await
             .map_err(|e| SignerError::SigningFailed(e.to_string()))?;
 
