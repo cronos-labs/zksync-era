@@ -244,7 +244,17 @@ impl EthTxManager {
             blob_base_fee_per_gas,
         } = self.calculate_fee(storage, tx, time_in_mempool).await?;
 
-        METRICS.used_base_fee_per_gas.observe(base_fee_per_gas);
+        let mut base_fee_per_gas_cap = base_fee_per_gas;
+        if base_fee_per_gas_cap > self.config.max_acceptable_base_fee_in_wei {
+            base_fee_per_gas_cap = self.config.max_acceptable_base_fee_in_wei;
+            tracing::debug!(
+                "initial base_fee {}, max reached and cap to {}",
+                base_fee_per_gas,
+                base_fee_per_gas_cap
+            );
+        }
+
+        METRICS.used_base_fee_per_gas.observe(base_fee_per_gas_cap);
         METRICS
             .used_priority_fee_per_gas
             .observe(priority_fee_per_gas);
@@ -260,7 +270,12 @@ impl EthTxManager {
         };
 
         let mut signed_tx = self
-            .sign_tx(tx, base_fee_per_gas, priority_fee_per_gas, blob_gas_price)
+            .sign_tx(
+                tx,
+                base_fee_per_gas_cap,
+                priority_fee_per_gas,
+                blob_gas_price,
+            )
             .await;
 
         if let Some(blob_sidecar) = &tx.blob_sidecar {
@@ -274,7 +289,7 @@ impl EthTxManager {
             .eth_sender_dal()
             .insert_tx_history(
                 tx.id,
-                base_fee_per_gas,
+                base_fee_per_gas_cap,
                 priority_fee_per_gas,
                 blob_base_fee_per_gas,
                 signed_tx.hash,
@@ -290,7 +305,7 @@ impl EthTxManager {
                 tracing::warn!(
                     "Error when sending new signed tx for tx {}, base_fee_per_gas {}, priority_fee_per_gas: {}: {}",
                     tx.id,
-                    base_fee_per_gas,
+                    base_fee_per_gas_cap,
                     priority_fee_per_gas,
                     error
                 );

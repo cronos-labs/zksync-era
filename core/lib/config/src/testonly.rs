@@ -388,6 +388,7 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             proof_loading_mode: self.sample(rng),
             pubdata_sending_mode: PubdataSendingMode::Calldata,
             signing_mode: SigningMode::PrivateKey,
+            max_acceptable_base_fee_in_wei: self.sample(rng),
         }
     }
 }
