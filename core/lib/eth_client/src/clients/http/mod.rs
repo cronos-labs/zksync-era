@@ -6,7 +6,7 @@ use vise::{
 
 pub use self::{
     query::QueryClient,
-    signing::{PKSigningClient, SigningClient},
+    signing::{GKMSSigningClient, PKSigningClient, SigningClient},
 };
 
 mod decl;

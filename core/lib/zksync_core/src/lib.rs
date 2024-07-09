@@ -37,8 +37,7 @@ use zksync_config::{
         },
         consensus::ConsensusConfig,
         database::{MerkleTreeConfig, MerkleTreeMode},
-        wallets,
-        wallets::Wallets,
+        wallets::{self, Wallets},
         ContractsConfig, GeneralConfig,
     },
     ApiConfig, DBConfig, EthWatchConfig, GenesisConfig, PostgresConfig,
@@ -47,7 +46,7 @@ use zksync_contracts::governance_contract;
 use zksync_dal::{metrics::PostgresMetrics, ConnectionPool, Core, CoreDal};
 use zksync_db_connection::healthcheck::ConnectionPoolHealthCheck;
 use zksync_eth_client::{
-    clients::{PKSigningClient, QueryClient},
+    clients::{GKMSSigningClient, PKSigningClient, QueryClient},
     BoundEthInterface, EthInterface,
 };
 use zksync_eth_sender::{
@@ -57,6 +56,7 @@ use zksync_eth_sender::{
     },
     Aggregator, EthTxAggregator, EthTxManager,
 };
+use zksync_eth_signer::g_kms_signer::{GOOGLE_KMS_OP_BLOB_KEY_NAME, GOOGLE_KMS_OP_KEY_NAME};
 use zksync_eth_watch::{EthHttpQueryClient, EthWatch};
 use zksync_health_check::{AppHealthCheck, HealthStatus, ReactiveHealthCheck};
 use zksync_house_keeper::{
@@ -649,54 +649,135 @@ pub async fn initialize_components(
             .default_priority_fee_per_gas;
         let l1_chain_id = genesis_config.l1_chain_id;
 
-        let eth_client = PKSigningClient::new_raw(
-            operator_private_key.clone(),
-            diamond_proxy_addr,
-            default_priority_fee_per_gas,
-            l1_chain_id,
-            query_client.clone(),
-        );
+        let gkms_op_key_name = std::env::var(GOOGLE_KMS_OP_KEY_NAME).ok();
+        tracing::info!("KMS op key name: {:?}", gkms_op_key_name);
 
-        let l1_batch_commit_data_generator_mode =
-            genesis_config.l1_batch_commit_data_generator_mode;
-        ensure_l1_batch_commit_data_generation_mode(
-            l1_batch_commit_data_generator_mode,
-            contracts_config.diamond_proxy_addr,
-            eth_client.as_ref(),
-        )
-        .await?;
+        let use_gkms_signing_client = gkms_op_key_name.is_some();
 
-        let l1_batch_commit_data_generator: Arc<dyn L1BatchCommitDataGenerator> =
-            match l1_batch_commit_data_generator_mode {
-                L1BatchCommitDataGeneratorMode::Rollup => {
-                    Arc::new(RollupModeL1BatchCommitDataGenerator {})
-                }
-                L1BatchCommitDataGeneratorMode::Validium => {
-                    Arc::new(ValidiumModeL1BatchCommitDataGenerator {})
-                }
+        if use_gkms_signing_client {
+            tracing::info!("Using KMSSigningClient");
+        } else {
+            tracing::info!("Using PKSSigningClient");
+        }
+
+        let eth_tx_aggregator_actor = if use_gkms_signing_client {
+            let eth_client = GKMSSigningClient::new_raw(
+                diamond_proxy_addr,
+                default_priority_fee_per_gas,
+                l1_chain_id,
+                query_client.clone(),
+                gkms_op_key_name
+                    .expect("gkms_op_key_name is required but was None")
+                    .to_string(),
+            )
+            .await;
+
+            let l1_batch_commit_data_generator_mode =
+                genesis_config.l1_batch_commit_data_generator_mode;
+            ensure_l1_batch_commit_data_generation_mode(
+                l1_batch_commit_data_generator_mode,
+                contracts_config.diamond_proxy_addr,
+                eth_client.as_ref(),
+            )
+            .await?;
+
+            let l1_batch_commit_data_generator: Arc<dyn L1BatchCommitDataGenerator> =
+                match l1_batch_commit_data_generator_mode {
+                    L1BatchCommitDataGeneratorMode::Rollup => {
+                        Arc::new(RollupModeL1BatchCommitDataGenerator {})
+                    }
+                    L1BatchCommitDataGeneratorMode::Validium => {
+                        Arc::new(ValidiumModeL1BatchCommitDataGenerator {})
+                    }
+                };
+
+            let gkms_op_blob_key_name = std::env::var(GOOGLE_KMS_OP_BLOB_KEY_NAME).ok();
+            tracing::info!("KMS op blob key name: {:?}", gkms_op_blob_key_name);
+            let operator_blobs_address = if let Some(key_name) = gkms_op_blob_key_name {
+                let eth_blob_client = GKMSSigningClient::new_raw(
+                    diamond_proxy_addr,
+                    default_priority_fee_per_gas,
+                    l1_chain_id,
+                    query_client.clone(),
+                    key_name.to_string(),
+                )
+                .await;
+
+                Some(eth_blob_client.sender_account())
+            } else {
+                None
             };
 
-        let operator_blobs_address = eth_sender_wallets.blob_operator.map(|x| x.address());
-
-        let sender_config = eth.sender.clone().context("eth_sender")?;
-        let eth_tx_aggregator_actor = EthTxAggregator::new(
-            eth_sender_pool,
-            sender_config.clone(),
-            Aggregator::new(
+            let sender_config = eth.sender.clone().context("eth_sender")?;
+            EthTxAggregator::new(
+                eth_sender_pool,
                 sender_config.clone(),
-                store_factory.create_store().await,
-                operator_blobs_address.is_some(),
-                l1_batch_commit_data_generator.clone(),
-            ),
-            Box::new(eth_client),
-            contracts_config.validator_timelock_addr,
-            contracts_config.l1_multicall3_addr,
-            diamond_proxy_addr,
-            l2_chain_id,
-            operator_blobs_address,
-            l1_batch_commit_data_generator,
-        )
-        .await;
+                Aggregator::new(
+                    sender_config.clone(),
+                    store_factory.create_store().await,
+                    operator_blobs_address.is_some(),
+                    l1_batch_commit_data_generator.clone(),
+                ),
+                Box::new(eth_client),
+                contracts_config.validator_timelock_addr,
+                contracts_config.l1_multicall3_addr,
+                diamond_proxy_addr,
+                l2_chain_id,
+                operator_blobs_address,
+                l1_batch_commit_data_generator,
+            )
+            .await
+        } else {
+            let eth_client = PKSigningClient::new_raw(
+                operator_private_key.clone(),
+                diamond_proxy_addr,
+                default_priority_fee_per_gas,
+                l1_chain_id,
+                query_client.clone(),
+            );
+
+            let l1_batch_commit_data_generator_mode =
+                genesis_config.l1_batch_commit_data_generator_mode;
+            ensure_l1_batch_commit_data_generation_mode(
+                l1_batch_commit_data_generator_mode,
+                contracts_config.diamond_proxy_addr,
+                eth_client.as_ref(),
+            )
+            .await?;
+
+            let l1_batch_commit_data_generator: Arc<dyn L1BatchCommitDataGenerator> =
+                match l1_batch_commit_data_generator_mode {
+                    L1BatchCommitDataGeneratorMode::Rollup => {
+                        Arc::new(RollupModeL1BatchCommitDataGenerator {})
+                    }
+                    L1BatchCommitDataGeneratorMode::Validium => {
+                        Arc::new(ValidiumModeL1BatchCommitDataGenerator {})
+                    }
+                };
+
+            let operator_blobs_address = eth_sender_wallets.blob_operator.map(|x| x.address());
+
+            let sender_config = eth.sender.clone().context("eth_sender")?;
+            EthTxAggregator::new(
+                eth_sender_pool,
+                sender_config.clone(),
+                Aggregator::new(
+                    sender_config.clone(),
+                    store_factory.create_store().await,
+                    operator_blobs_address.is_some(),
+                    l1_batch_commit_data_generator.clone(),
+                ),
+                Box::new(eth_client),
+                contracts_config.validator_timelock_addr,
+                contracts_config.l1_multicall3_addr,
+                diamond_proxy_addr,
+                l2_chain_id,
+                operator_blobs_address,
+                l1_batch_commit_data_generator,
+            )
+            .await
+        };
+
         task_futures.push(tokio::spawn(
             eth_tx_aggregator_actor.run(stop_receiver.clone()),
         ));
@@ -714,7 +795,6 @@ pub async fn initialize_components(
             .context("failed to build eth_manager_pool")?;
         let eth_sender = configs.eth.clone().context("eth_sender_config")?;
         let eth_sender_wallets = wallets.eth_sender.clone().context("eth_sender")?;
-        let operator_private_key = eth_sender_wallets.operator.private_key();
         let diamond_proxy_addr = contracts_config.diamond_proxy_addr;
         let default_priority_fee_per_gas = eth
             .gas_adjuster
@@ -723,38 +803,88 @@ pub async fn initialize_components(
             .default_priority_fee_per_gas;
         let l1_chain_id = genesis_config.l1_chain_id;
 
-        let eth_client = PKSigningClient::new_raw(
-            operator_private_key.clone(),
-            diamond_proxy_addr,
-            default_priority_fee_per_gas,
-            l1_chain_id,
-            query_client.clone(),
-        );
+        let gkms_op_key_name = std::env::var(GOOGLE_KMS_OP_KEY_NAME).ok();
+        let use_gkms_signing_client = gkms_op_key_name.is_some();
+        if use_gkms_signing_client {
+            tracing::info!("Using KMSSigningClient");
+        } else {
+            tracing::info!("Using PKSSigningClient");
+        }
 
-        let eth_client_blobs = if let Some(blob_operator) = eth_sender_wallets.blob_operator {
-            let operator_blob_private_key = blob_operator.private_key().clone();
-            let client = Box::new(PKSigningClient::new_raw(
-                operator_blob_private_key,
+        let eth_tx_manager_actor = if use_gkms_signing_client {
+            let eth_client = GKMSSigningClient::new_raw(
                 diamond_proxy_addr,
                 default_priority_fee_per_gas,
                 l1_chain_id,
-                query_client,
-            ));
-            Some(client as Box<dyn BoundEthInterface>)
+                query_client.clone(),
+                gkms_op_key_name
+                    .expect("gkms_op_key_name is required but was None")
+                    .to_string(),
+            )
+            .await;
+
+            let gkms_op_blob_key_name = std::env::var(GOOGLE_KMS_OP_BLOB_KEY_NAME).ok();
+            let eth_client_blobs = if let Some(key_name) = gkms_op_blob_key_name {
+                let client = Box::new(
+                    GKMSSigningClient::new_raw(
+                        diamond_proxy_addr,
+                        default_priority_fee_per_gas,
+                        l1_chain_id,
+                        query_client.clone(),
+                        key_name.to_string(),
+                    )
+                    .await,
+                );
+                Some(client as Box<dyn BoundEthInterface>)
+            } else {
+                None
+            };
+
+            EthTxManager::new(
+                eth_manager_pool,
+                eth_sender.sender.clone().context("eth_sender")?,
+                gas_adjuster
+                    .get_or_init()
+                    .await
+                    .context("gas_adjuster.get_or_init()")?,
+                Box::new(eth_client),
+                eth_client_blobs,
+            )
         } else {
-            None
+            let operator_private_key = eth_sender_wallets.operator.private_key();
+            let eth_client = PKSigningClient::new_raw(
+                operator_private_key.clone(),
+                diamond_proxy_addr,
+                default_priority_fee_per_gas,
+                l1_chain_id,
+                query_client.clone(),
+            );
+            let eth_client_blobs = if let Some(blob_operator) = eth_sender_wallets.blob_operator {
+                let operator_blob_private_key = blob_operator.private_key().clone();
+                let client = Box::new(PKSigningClient::new_raw(
+                    operator_blob_private_key,
+                    diamond_proxy_addr,
+                    default_priority_fee_per_gas,
+                    l1_chain_id,
+                    query_client,
+                ));
+                Some(client as Box<dyn BoundEthInterface>)
+            } else {
+                None
+            };
+
+            EthTxManager::new(
+                eth_manager_pool,
+                eth_sender.sender.clone().context("eth_sender")?,
+                gas_adjuster
+                    .get_or_init()
+                    .await
+                    .context("gas_adjuster.get_or_init()")?,
+                Box::new(eth_client),
+                eth_client_blobs,
+            )
         };
 
-        let eth_tx_manager_actor = EthTxManager::new(
-            eth_manager_pool,
-            eth_sender.sender.clone().context("eth_sender")?,
-            gas_adjuster
-                .get_or_init()
-                .await
-                .context("gas_adjuster.get_or_init()")?,
-            Box::new(eth_client),
-            eth_client_blobs,
-        );
         task_futures.extend([tokio::spawn(
             eth_tx_manager_actor.run(stop_receiver.clone()),
         )]);
