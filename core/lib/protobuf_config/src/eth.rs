@@ -60,6 +60,24 @@ impl proto::PubdataSendingMode {
     }
 }
 
+impl proto::SigningMode {
+    fn new(x: &configs::eth_sender::SigningMode) -> Self {
+        use configs::eth_sender::SigningMode as From;
+        match x {
+            From::PrivateKey => Self::PrivateKey,
+            From::GcloudKms => Self::GcloudKms,
+        }
+    }
+
+    fn parse(&self) -> configs::eth_sender::SigningMode {
+        use configs::eth_sender::SigningMode as To;
+        match self {
+            Self::PrivateKey => To::PrivateKey,
+            Self::GcloudKms => To::GcloudKms,
+        }
+    }
+}
+
 impl ProtoRepr for proto::Eth {
     type Type = configs::eth_sender::EthConfig;
 
@@ -136,6 +154,10 @@ impl ProtoRepr for proto::Sender {
                 .and_then(|x| Ok(proto::ProofLoadingMode::try_from(*x)?))
                 .context("proof_loading_mode")?
                 .parse(),
+            signing_mode: required(&self.signing_mode)
+                .and_then(|x| Ok(proto::SigningMode::try_from(*x)?))
+                .context("signing_mode")?
+                .parse(),
         })
     }
 
@@ -167,6 +189,7 @@ impl ProtoRepr for proto::Sender {
                 proto::PubdataSendingMode::new(&this.pubdata_sending_mode).into(),
             ),
             proof_loading_mode: Some(proto::ProofLoadingMode::new(&this.proof_loading_mode).into()),
+            signing_mode: Some(proto::SigningMode::new(&this.signing_mode).into()),
         }
     }
 }
