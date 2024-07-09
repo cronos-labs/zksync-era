@@ -43,7 +43,7 @@ use zksync_node_framework::{
             main_node_strategy::MainNodeInitStrategyLayer, NodeStorageInitializerLayer,
         },
         object_store::ObjectStoreLayer,
-        pk_signing_eth_client::PKSigningEthClientLayer,
+        pk_signing_eth_client::{PKSigningEthClientLayer, SigningEthClientType},
         pools_layer::PoolsLayerBuilder,
         postgres_metrics::PostgresMetricsLayer,
         prometheus_exporter::PrometheusExporterLayer,
@@ -71,7 +71,6 @@ use zksync_node_framework::{
 };
 use zksync_types::{settlement::SettlementMode, SHARED_BRIDGE_ETHER_TOKEN_ADDRESS};
 use zksync_vlog::prometheus::PrometheusExporterConfig;
-
 /// Macro that looks into a path to fetch an optional config,
 /// and clones it into a variable.
 macro_rules! try_load_config {
@@ -143,11 +142,13 @@ impl MainNodeBuilder {
     fn add_pk_signing_client_layer(mut self) -> anyhow::Result<Self> {
         let eth_config = try_load_config!(self.configs.eth);
         let wallets = try_load_config!(self.wallets.eth_sender);
+
         self.node.add_layer(PKSigningEthClientLayer::new(
             eth_config,
             self.contracts_config.clone(),
             self.genesis_config.settlement_layer_id(),
             wallets,
+            SigningEthClientType::PKSigningEthClient,
         ));
         Ok(self)
     }
