@@ -11,6 +11,7 @@ use zksync_config::{
         },
         fri_prover_group::FriProverGroupConfig,
         house_keeper::HouseKeeperConfig,
+        tx_sink::TxSinkConfig,
         ContractsConfig, FriProofCompressorConfig, FriProverConfig, FriProverGatewayConfig,
         FriWitnessGeneratorConfig, FriWitnessVectorGeneratorConfig, ObservabilityConfig,
         PrometheusConfig, ProofDataHandlerConfig,
@@ -45,7 +46,7 @@ struct Cli {
     /// Comma-separated list of components to launch.
     #[arg(
         long,
-        default_value = "api,tree,eth,state_keeper,housekeeper,commitment_generator"
+        default_value = "api,tree,eth,state_keeper,housekeeper,commitment_generator,deny_list"
     )]
     components: ComponentsToRun,
     /// Path to the yaml config. If set, it will be used instead of env vars.
@@ -275,5 +276,6 @@ fn load_env_config() -> anyhow::Result<TempConfigStore> {
         object_store_config: ObjectStoreConfig::from_env().ok(),
         observability: ObservabilityConfig::from_env().ok(),
         snapshot_creator: SnapshotsCreatorConfig::from_env().ok(),
+        tx_sink_config: TxSinkConfig::from_env().ok(),
     })
 }

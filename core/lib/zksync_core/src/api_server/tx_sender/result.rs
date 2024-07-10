@@ -1,4 +1,7 @@
-use multivm::interface::{ExecutionResult, VmExecutionResultAndLogs};
+use multivm::{
+    interface::{ExecutionResult, VmExecutionResultAndLogs},
+    zk_evm_latest::ethereum_types::Address,
+};
 use thiserror::Error;
 use zksync_types::{l2::error::TxCheckError, U256};
 use zksync_web3_decl::error::EnrichedClientError;
@@ -75,6 +78,8 @@ pub enum SubmitTxError {
     /// Catch-all internal error (e.g., database error) that should not be exposed to the caller.
     #[error("internal error")]
     Internal(#[from] anyhow::Error),
+    #[error("sender address {0} is in deny list")]
+    SenderInDenyList(Address),
 }
 
 impl SubmitTxError {
@@ -108,6 +113,7 @@ impl SubmitTxError {
             Self::ProxyError(_) => "proxy-error",
             Self::FailedToPublishCompressedBytecodes => "failed-to-publish-compressed-bytecodes",
             Self::Internal(_) => "internal",
+            Self::SenderInDenyList(_) => "sender-in-deny-list",
         }
     }
 
