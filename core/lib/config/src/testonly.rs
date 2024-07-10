@@ -13,7 +13,9 @@ use zksync_consensus_utils::EncodeDist;
 use zksync_crypto_primitives::K256PrivateKey;
 
 use crate::configs::{
-    self, eth_sender::PubdataSendingMode, external_price_api_client::ForcedPriceClientConfig,
+    self,
+    eth_sender::{PubdataSendingMode, SigningMode},
+    external_price_api_client::ForcedPriceClientConfig,
 };
 
 trait Sample {
@@ -412,6 +414,7 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             pubdata_sending_mode: PubdataSendingMode::Calldata,
             tx_aggregation_paused: false,
             tx_aggregation_only_prove_and_execute: false,
+            signing_mode: SigningMode::PrivateKey,
         }
     }
 }
