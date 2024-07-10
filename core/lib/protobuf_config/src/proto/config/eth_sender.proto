@@ -50,6 +50,7 @@ message Sender {
   optional PubdataSendingMode pubdata_sending_mode = 18; // required
   optional ProofLoadingMode proof_loading_mode = 19;
   optional SigningMode signing_mode = 99; // required
+  optional uint64 max_acceptable_base_fee_in_wei = 100; // required; wei
 }
 
 message GasAdjuster {
