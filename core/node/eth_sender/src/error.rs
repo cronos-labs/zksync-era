@@ -6,4 +6,6 @@ pub enum ETHSenderError {
     EthereumGateWayError(#[from] zksync_eth_client::Error),
     #[error("Token parsing Error: {0}")]
     ParseError(#[from] contract::Error),
+    #[error("Max base fee exceeded")]
+    ExceedMaxBaseFee,
 }

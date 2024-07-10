@@ -19,6 +19,7 @@ use zksync_types::{
 use zksync_utils::time::seconds_since_epoch;
 
 use super::{metrics::METRICS, ETHSenderError};
+use crate::ETHSenderError::ExceedMaxBaseFee;
 
 #[derive(Debug)]
 struct EthFee {
@@ -243,6 +244,16 @@ impl EthTxManager {
             priority_fee_per_gas,
             blob_base_fee_per_gas,
         } = self.calculate_fee(storage, tx, time_in_mempool).await?;
+
+        if base_fee_per_gas > self.config.max_acceptable_base_fee_in_wei {
+            tracing::info!(
+                    "base fee per gas: {} exceed max acceptable fee in configuration: {}, skip transaction",
+                    base_fee_per_gas,
+                    self.config.max_acceptable_base_fee_in_wei
+            );
+
+            return Err(ExceedMaxBaseFee);
+        }
 
         METRICS.used_base_fee_per_gas.observe(base_fee_per_gas);
         METRICS
