@@ -70,6 +70,7 @@ mod tests {
                     l1_batch_min_age_before_execute_seconds: Some(1000),
                     max_acceptable_priority_fee_in_gwei: 100_000_000_000,
                     pubdata_sending_mode: PubdataSendingMode::Calldata,
+                    signing_mode: SigningMode::PrivateKey,
                 }),
                 gas_adjuster: Some(GasAdjusterConfig {
                     default_priority_fee_per_gas: 20000000000,
@@ -131,6 +132,7 @@ mod tests {
             ETH_SENDER_SENDER_L1_BATCH_MIN_AGE_BEFORE_EXECUTE_SECONDS="1000"
             ETH_SENDER_SENDER_MAX_ACCEPTABLE_PRIORITY_FEE_IN_GWEI="100000000000"
             ETH_SENDER_SENDER_PUBDATA_SENDING_MODE="Calldata"
+            ETH_SENDER_SENDER_SIGNING_MODE="PrivateKey"
             ETH_CLIENT_WEB3_URL="http://127.0.0.1:8545"
 
         "#;

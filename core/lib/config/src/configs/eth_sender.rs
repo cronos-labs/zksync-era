@@ -40,6 +40,7 @@ impl EthConfig {
                 l1_batch_min_age_before_execute_seconds: None,
                 max_acceptable_priority_fee_in_gwei: 100000000000,
                 pubdata_sending_mode: PubdataSendingMode::Calldata,
+                signing_mode: SigningMode::PrivateKey,
             }),
             gas_adjuster: Some(GasAdjusterConfig {
                 default_priority_fee_per_gas: 1000000000,
@@ -84,6 +85,13 @@ pub enum PubdataSendingMode {
     Custom,
 }
 
+#[derive(Debug, Deserialize, Clone, Copy, PartialEq, Default)]
+pub enum SigningMode {
+    #[default]
+    PrivateKey,
+    GcloudKms,
+}
+
 #[derive(Debug, Deserialize, Clone, PartialEq)]
 pub struct SenderConfig {
     pub aggregated_proof_sizes: Vec<usize>,
@@ -117,6 +125,9 @@ pub struct SenderConfig {
 
     /// The mode in which we send pubdata: Calldata, Blobs or Custom (DA layers, Object Store, etc.)
     pub pubdata_sending_mode: PubdataSendingMode,
+
+    /// Type of signing client for Ethereum transactions.
+    pub signing_mode: SigningMode,
 }
 
 impl SenderConfig {
