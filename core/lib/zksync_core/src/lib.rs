@@ -41,8 +41,8 @@ use zksync_config::{
         consensus::ConsensusConfig,
         database::{MerkleTreeConfig, MerkleTreeMode},
         eth_sender::SigningMode,
-        wallets::{self, Wallets},
         tx_sink::TxSinkConfig,
+        wallets::{self, Wallets},
         ContractsConfig, GeneralConfig,
     },
     ApiConfig, DBConfig, EthWatchConfig, GenesisConfig, PostgresConfig,
@@ -199,7 +199,7 @@ pub enum Component {
     Consensus,
     /// Component generating commitment for L1 batches.
     CommitmentGenerator,
-    /// Component for filtering L2 transacions by denylist
+    /// Component for filtering L2 transactions by denylist
     TxSinkDenyList,
 }
 
@@ -234,7 +234,7 @@ impl FromStr for Components {
             "proof_data_handler" => Ok(Components(vec![Component::ProofDataHandler])),
             "consensus" => Ok(Components(vec![Component::Consensus])),
             "commitment_generator" => Ok(Components(vec![Component::CommitmentGenerator])),
-            "txsink_denylist" => Ok(Components(vec![Component::TxSinkDenyList])),
+            "deny_list" => Ok(Components(vec![Component::TxSinkDenyList])),
             other => Err(format!("{} is not a valid component name", other)),
         }
     }
@@ -1399,9 +1399,9 @@ async fn build_tx_sender(
 
     let tx_sender_builder = if let Some(config) = builder_config.tx_sink_config {
         let deny_list_pool_sink = if let Some(list) = config.deny_list() {
-            DenyListPoolSink::new(master_pool, list)
+            DenyListPoolSink::new(MasterPoolSink::new(master_pool), list)
         } else {
-            DenyListPoolSink::new(master_pool, HashSet::<Address>::new())
+            DenyListPoolSink::new(MasterPoolSink::new(master_pool), HashSet::<Address>::new())
         };
 
         TxSenderBuilder::new(
@@ -1411,11 +1411,10 @@ async fn build_tx_sender(
         )
         .with_sealer(Arc::new(sequencer_sealer))
     } else {
-        let master_pool_sink = MasterPoolSink::new(master_pool);
         TxSenderBuilder::new(
             builder_config.tx_sender_config.clone(),
             replica_pool.clone(),
-            Arc::new(master_pool_sink),
+            Arc::new(MasterPoolSink::new(master_pool)),
         )
         .with_sealer(Arc::new(sequencer_sealer))
     };

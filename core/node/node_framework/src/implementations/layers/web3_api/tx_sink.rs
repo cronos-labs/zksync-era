@@ -49,7 +49,10 @@ impl WiringLayer for TxSinkLayer {
                     .await?
                     .get()
                     .await?;
-                TxSinkResource(Arc::new(DenyListPoolSink::new(pool, deny_list.clone())))
+                TxSinkResource(Arc::new(DenyListPoolSink::new(
+                    MasterPoolSink::new(pool),
+                    deny_list.clone(),
+                )))
             }
         };
         context.insert_resource(tx_sink)?;
