@@ -43,7 +43,7 @@ use zksync_node_framework::{
             main_node_strategy::MainNodeInitStrategyLayer, NodeStorageInitializerLayer,
         },
         object_store::ObjectStoreLayer,
-        pk_signing_eth_client::PKSigningEthClientLayer,
+        pk_signing_eth_client::{PKSigningEthClientLayer, SigningEthClientType},
         pools_layer::PoolsLayerBuilder,
         postgres_metrics::PostgresMetricsLayer,
         prometheus_exporter::PrometheusExporterLayer,
@@ -146,6 +146,7 @@ impl MainNodeBuilder {
             self.contracts_config.clone(),
             self.genesis_config.l1_chain_id,
             wallets,
+            SigningEthClientType::PKSigningEthClient,
         ));
         Ok(self)
     }
