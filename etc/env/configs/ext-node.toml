@@ -83,6 +83,7 @@ loadnext=info,\
 vm=info,\
 zksync_external_node=info,\
 zksync_snapshots_applier=debug,\
+zksync_eth_signer=info,\
 """
 
 # `RUST_BACKTRACE` variable
