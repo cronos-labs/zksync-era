@@ -18,9 +18,6 @@ use crate::{
     EthereumSigner, SignerError,
 };
 
-pub const GOOGLE_KMS_OP_KEY_NAME: &str = "GOOGLE_KMS_OP_KEY_NAME";
-pub const GOOGLE_KMS_OP_BLOB_KEY_NAME: &str = "GOOGLE_KMS_OP_BLOB_KEY_NAME";
-
 #[derive(Debug, Clone)]
 pub struct GKMSSigner {
     signer: Signer,

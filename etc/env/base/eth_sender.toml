@@ -48,7 +48,14 @@ max_acceptable_priority_fee_in_gwei = 100000000000
 
 pubdata_sending_mode = "Blobs"
 
+# The eth signer type (PrivateKey/GcloudKms)
 signing_mode = "PrivateKey"
+
+# The Google cloud KMS key name for eth sender operator
+gkms_op_key_name = ""
+
+# The Google cloud KMS key name for eth sender operator blob
+gkms_op_blob_key_name = ""
 
 [eth_sender.gas_adjuster]
 # Priority fee to be used by GasAdjuster (in wei).

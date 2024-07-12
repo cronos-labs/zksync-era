@@ -53,6 +53,8 @@ message Sender {
   reserved 19;
   reserved "proof_loading_mode";
   optional SigningMode signing_mode = 99; // required
+  optional string gkms_op_key_name = 100; // optional;
+  optional string gkms_op_blob_key_name = 101; // optional;
 }
 
 message GasAdjuster {

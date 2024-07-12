@@ -41,6 +41,8 @@ impl EthConfig {
                 max_acceptable_priority_fee_in_gwei: 100000000000,
                 pubdata_sending_mode: PubdataSendingMode::Calldata,
                 signing_mode: SigningMode::PrivateKey,
+                gkms_op_key_name: None,
+                gkms_op_blob_key_name: None,
             }),
             gas_adjuster: Some(GasAdjusterConfig {
                 default_priority_fee_per_gas: 1000000000,
@@ -128,6 +130,12 @@ pub struct SenderConfig {
 
     /// Type of signing client for Ethereum transactions.
     pub signing_mode: SigningMode,
+
+    /// Optional GCP KMS operation key name for Ethereum transactions.
+    pub gkms_op_key_name: Option<String>,
+
+    /// Optional GCP KMS operation key name for Ethereum blobs.
+    pub gkms_op_blob_key_name: Option<String>,
 }
 
 impl SenderConfig {

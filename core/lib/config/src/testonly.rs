@@ -383,6 +383,8 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             max_acceptable_priority_fee_in_gwei: self.sample(rng),
             pubdata_sending_mode: PubdataSendingMode::Calldata,
             signing_mode: SigningMode::PrivateKey,
+            gkms_op_key_name: None,
+            gkms_op_blob_key_name: None,
         }
     }
 }

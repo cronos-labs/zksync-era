@@ -1,6 +1,6 @@
 use anyhow::Context as _;
 use zksync_config::configs::{self};
-use zksync_protobuf::{required, ProtoRepr};
+use zksync_protobuf::{read_optional, required, ProtoRepr};
 
 use crate::{proto::eth as proto, read_optional_repr};
 
@@ -133,6 +133,8 @@ impl ProtoRepr for proto::Sender {
                 .and_then(|x| Ok(proto::SigningMode::try_from(*x)?))
                 .context("signing_mode")?
                 .parse(),
+            gkms_op_key_name: self.gkms_op_key_name.clone(),
+            gkms_op_blob_key_name: self.gkms_op_blob_key_name.clone(),
         })
     }
 
@@ -164,6 +166,8 @@ impl ProtoRepr for proto::Sender {
                 proto::PubdataSendingMode::new(&this.pubdata_sending_mode).into(),
             ),
             signing_mode: Some(proto::SigningMode::new(&this.signing_mode).into()),
+            gkms_op_key_name: this.gkms_op_key_name.clone(),
+            gkms_op_blob_key_name: this.gkms_op_blob_key_name.clone(),
         }
     }
 }

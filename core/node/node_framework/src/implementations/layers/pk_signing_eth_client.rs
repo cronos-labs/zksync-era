@@ -114,11 +114,14 @@ impl WiringLayer for PKSigningEthClientLayer {
                     .as_ref()
                     .context("gas_adjuster config is missing")?;
 
-                let gkms_op_key_name = std::env::var("GOOGLE_KMS_OP_KEY_NAME").ok();
-                tracing::info!(
-                    "KMS op key name: {:?}",
-                    std::env::var("GOOGLE_KMS_OP_KEY_NAME")
-                );
+                let eth_sender_config = self
+                    .eth_sender_config
+                    .sender
+                    .as_ref()
+                    .context("eth_sender sender config is missing")?;
+
+                let gkms_op_key_name = &eth_sender_config.gkms_op_key_name;
+                tracing::info!("GKMS op key name: {:?}", gkms_op_key_name);
 
                 let EthInterfaceResource(query_client) = input.eth_client;
 
@@ -128,17 +131,15 @@ impl WiringLayer for PKSigningEthClientLayer {
                     self.l1_chain_id,
                     query_client.clone(),
                     gkms_op_key_name
+                        .as_ref()
                         .expect("gkms_op_key_name is required but was None")
                         .to_string(),
                 )
                 .await;
                 signing_client = BoundEthInterfaceResource(Box::new(sc));
 
-                let gkms_op_blob_key_name = std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME").ok();
-                tracing::info!(
-                    "KMS op blob key name: {:?}",
-                    std::env::var("GOOGLE_KMS_OP_BLOB_KEY_NAME")
-                );
+                let gkms_op_blob_key_name = &eth_sender_config.gkms_op_blob_key_name;
+                tracing::info!("GKMS op blob key name: {:?}", gkms_op_blob_key_name);
 
                 if let Some(key_name) = gkms_op_blob_key_name {
                     let blobs_resources = GKMSSigningClient::new_raw(
