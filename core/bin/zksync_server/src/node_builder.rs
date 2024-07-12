@@ -4,7 +4,9 @@
 use anyhow::Context;
 use zksync_config::{
     configs::{
-        consensus::ConsensusConfig, eth_sender::PubdataSendingMode, wallets::Wallets,
+        consensus::ConsensusConfig,
+        eth_sender::{PubdataSendingMode, SigningMode},
+        wallets::Wallets,
         GeneralConfig, Secrets,
     },
     ContractsConfig, GenesisConfig,
@@ -141,12 +143,17 @@ impl MainNodeBuilder {
     fn add_pk_signing_client_layer(mut self) -> anyhow::Result<Self> {
         let eth_config = try_load_config!(self.configs.eth);
         let wallets = try_load_config!(self.wallets.eth_sender);
+        let eth_sender_config = try_load_config!(eth_config.sender);
+
         self.node.add_layer(PKSigningEthClientLayer::new(
             eth_config,
             self.contracts_config.clone(),
             self.genesis_config.l1_chain_id,
             wallets,
-            SigningEthClientType::PKSigningEthClient,
+            match eth_sender_config.signing_mode {
+                SigningMode::PrivateKey => SigningEthClientType::PKSigningEthClient,
+                SigningMode::GcloudKms => SigningEthClientType::GKMSSigningEthClient,
+            },
         ));
         Ok(self)
     }
