@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - nix
+    paths:
+      - 'nix/local/oci-images.nix'
 
 permissions:
   id-token: write

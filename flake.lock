@@ -243,11 +243,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1720594544,
-        "narHash": "sha256-w6dlBUQYvS65f0Z33TvkcAj7ITr4NFqhF5ywss5T5bU=",
+        "lastModified": 1720657034,
+        "narHash": "sha256-nPhbeFdyN8yn+EXmnPcBWisoypndtQbNIhSKmAinv3E=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "aa9461550594533c29866d42f861b6ff079a7fb6",
+        "rev": "212defe037698e18fc9521dfe451779a8979844c",
         "type": "github"
       },
       "original": {
@@ -553,11 +553,11 @@
     "zkevm-24-2-0": {
       "flake": false,
       "locked": {
-        "lastModified": 1720597294,
-        "narHash": "sha256-noWLF7ss0gPI8alqqJ9kdNy82cJ2MyxU2RB9sprrczo=",
+        "lastModified": 1720749689,
+        "narHash": "sha256-oFmxVrDwNt5HTCA14oaMmEPOMdMn63SE6OQm4nNsqMY=",
         "owner": "cronos-labs",
         "repo": "cronos-zkevm",
-        "rev": "c0933f02f7940eea345bf58ecd35264d6979334b",
+        "rev": "7ce39a3c87ebbff50341be8b0eed5eedd8367831",
         "type": "github"
       },
       "original": {
