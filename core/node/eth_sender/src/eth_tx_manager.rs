@@ -132,7 +132,7 @@ impl EthTxManager {
 
         if tx.blob_sidecar.is_some() {
             if time_in_mempool != 0 {
-                // for blob transactions on re-sending need to double all gas prices
+                // for transactions on re-sending need to add 0.1 gwei to prevent underprice replacement error
                 let previous_sent_tx = storage
                     .eth_sender_dal()
                     .get_last_sent_eth_tx(tx.id)
@@ -141,11 +141,11 @@ impl EthTxManager {
                     .unwrap();
                 return Ok(EthFee {
                     base_fee_per_gas: std::cmp::max(
-                        previous_sent_tx.base_fee_per_gas * 2,
+                        previous_sent_tx.base_fee_per_gas + 100000000,
                         base_fee_per_gas,
                     ),
                     priority_fee_per_gas: std::cmp::max(
-                        previous_sent_tx.priority_fee_per_gas * 2,
+                        previous_sent_tx.priority_fee_per_gas + 100000000,
                         priority_fee_per_gas,
                     ),
                     blob_base_fee_per_gas: std::cmp::max(
