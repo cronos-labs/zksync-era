@@ -3,6 +3,8 @@ name: STD 1
   push:
     branches:
       - nix
+    paths:
+      - nix/local/oci-images.nix
 permissions:
   id-token: write
   contents: read
