@@ -243,11 +243,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1720657034,
-        "narHash": "sha256-nPhbeFdyN8yn+EXmnPcBWisoypndtQbNIhSKmAinv3E=",
+        "lastModified": 1720955038,
+        "narHash": "sha256-GaliJqfFwyYxReFywxAa8orCO+EnDq2NK2F+5aSc8vo=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "212defe037698e18fc9521dfe451779a8979844c",
+        "rev": "aa247c0c90ecf4ae7a032c54fdc21b91ca274062",
         "type": "github"
       },
       "original": {
@@ -384,11 +384,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1720664424,
-        "narHash": "sha256-+odiMNHRYdvzL1ewl41UVFxsjmdoXfH+maQ8xvUoR4g=",
+        "lastModified": 1721010111,
+        "narHash": "sha256-GuPw2xhJZ+eszIJFu7z7AtqUmirSWPHpxuCpG6dSOic=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "fec97e65fcbaab0decccba740ac8688f61dadd70",
+        "rev": "3ef018b6d0f62eb59580a8e9fe141e37bf1d972d",
         "type": "github"
       },
       "original": {
@@ -553,11 +553,11 @@
     "zkevm-24-2-0": {
       "flake": false,
       "locked": {
-        "lastModified": 1720749689,
-        "narHash": "sha256-oFmxVrDwNt5HTCA14oaMmEPOMdMn63SE6OQm4nNsqMY=",
+        "lastModified": 1721023294,
+        "narHash": "sha256-3PE8FAfR9PlAAQgV2L9m2MVw7YQ6+7ia1TGqQSy0YHg=",
         "owner": "cronos-labs",
         "repo": "cronos-zkevm",
-        "rev": "7ce39a3c87ebbff50341be8b0eed5eedd8367831",
+        "rev": "38de7b9c612215fcc54f3bb99b6c7b5dc4292e05",
         "type": "github"
       },
       "original": {
