@@ -279,7 +279,7 @@ impl MainNodeBuilder {
         Ok(self)
     }
 
-    fn add_tx_sender_layer(mut self) -> anyhow::Result<Self> {
+    fn add_tx_sender_layer(mut self, with_denylist: bool) -> anyhow::Result<Self> {
         let sk_config = try_load_config!(self.configs.state_keeper_config);
         let rpc_config = try_load_config!(self.configs.api_config).web3_json_rpc;
         let postgres_storage_caches_config = PostgresStorageCachesConfig {
@@ -289,7 +289,14 @@ impl MainNodeBuilder {
         };
 
         // On main node we always use master pool sink.
-        self.node.add_layer(MasterPoolSinkLayer);
+        if with_denylist {
+            let txsink_config = try_load_config!(self.configs.api_config).tx_sink;
+            self.node
+                .add_layer(MasterPoolSinkLayer::deny_list(txsink_config.deny_list));
+        } else {
+            self.node.add_layer(MasterPoolSinkLayer::default());
+        }
+
         self.node.add_layer(TxSenderLayer::new(
             TxSenderConfig::new(
                 &sk_config,
@@ -634,16 +641,22 @@ impl MainNodeBuilder {
                         .add_storage_initialization_layer(LayerKind::Task)?
                         .add_state_keeper_layer()?;
                 }
+                Component::TxSinkDenyList => {
+                    let with_denylist = true;
+                    self = self.add_tx_sender_layer(with_denylist)?;
+                }
                 Component::HttpApi => {
+                    let with_denylist = false;
                     self = self
-                        .add_tx_sender_layer()?
+                        .add_tx_sender_layer(with_denylist)?
                         .add_tree_api_client_layer()?
                         .add_api_caches_layer()?
                         .add_http_web3_api_layer()?;
                 }
                 Component::WsApi => {
+                    let with_denylist = false;
                     self = self
-                        .add_tx_sender_layer()?
+                        .add_tx_sender_layer(with_denylist)?
                         .add_tree_api_client_layer()?
                         .add_api_caches_layer()?
                         .add_ws_web3_api_layer()?;

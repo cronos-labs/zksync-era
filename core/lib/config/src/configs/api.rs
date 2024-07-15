@@ -1,5 +1,5 @@
 use std::{
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     fmt,
     net::SocketAddr,
     num::{NonZeroU32, NonZeroUsize},
@@ -24,6 +24,8 @@ pub struct ApiConfig {
     pub healthcheck: HealthCheckConfig,
     /// Configuration options for Merkle tree API.
     pub merkle_tree: MerkleTreeApiConfig,
+    /// Configuration options for the transactions sink.
+    pub tx_sink: TxSinkConfig,
 }
 
 /// Response size limits for specific RPC methods.
@@ -404,6 +406,21 @@ pub struct MerkleTreeApiConfig {
 impl MerkleTreeApiConfig {
     const fn default_port() -> u16 {
         3_072
+    }
+}
+
+#[derive(Debug, Deserialize, Clone, PartialEq)]
+pub struct TxSinkConfig {
+    pub deny_list: Option<String>,
+}
+
+impl TxSinkConfig {
+    pub fn deny_list(&self) -> Option<HashSet<Address>> {
+        self.deny_list.as_ref().map(|list| {
+            list.split(',')
+                .map(|element| Address::from_str(element).unwrap())
+                .collect()
+        })
     }
 }
 
