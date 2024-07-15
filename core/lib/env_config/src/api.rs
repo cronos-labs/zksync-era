@@ -49,7 +49,7 @@ impl FromEnv for MerkleTreeApiConfig {
 impl FromEnv for TxSinkConfig {
     /// Loads configuration from env variables.
     fn from_env() -> anyhow::Result<Self> {
-        envy_load("tx_sink", "TX_SINK_")
+        envy_load("tx_sink", "API_TX_SINK_")
     }
 }
 
@@ -122,7 +122,7 @@ mod tests {
             },
             merkle_tree: MerkleTreeApiConfig { port: 8082 },
             tx_sink: TxSinkConfig {
-                deny_list: vec![addr("0x1234567890abcdef")],
+                deny_list: Some("0x1234567890abcdef".to_string()),
             },
         }
     }

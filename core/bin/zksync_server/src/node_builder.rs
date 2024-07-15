@@ -295,7 +295,7 @@ impl MainNodeBuilder {
                 .add_layer(MasterPoolSinkLayer::deny_list(txsink_config.deny_list()));
             tracing::info!(
                 "Add MasterPoolSinkLayer with deny list: {:?}",
-                txsink_config.deny_list().unwrap()
+                txsink_config.deny_list().unwrap_or_default()
             );
         } else {
             self.node.add_layer(MasterPoolSinkLayer::default());
