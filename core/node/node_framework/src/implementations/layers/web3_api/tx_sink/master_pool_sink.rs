@@ -1,4 +1,4 @@
-use std::{collections::HashSet, str::FromStr};
+use std::collections::HashSet;
 
 use zksync_node_api_server::tx_sender::master_pool_sink::MasterPoolSink;
 use zksync_types::Address;
@@ -18,13 +18,7 @@ pub struct MasterPoolSinkLayer {
 }
 
 impl MasterPoolSinkLayer {
-    pub fn deny_list(_deny_list: Option<String>) -> Self {
-        let deny_list = _deny_list.map(|list| {
-            list.split(',')
-                .map(|element| Address::from_str(element).unwrap())
-                .collect()
-        });
-
+    pub fn deny_list(deny_list: Option<HashSet<Address>>) -> Self {
         Self { deny_list }
     }
 

@@ -292,7 +292,11 @@ impl MainNodeBuilder {
         if with_denylist {
             let txsink_config = try_load_config!(self.configs.api_config).tx_sink;
             self.node
-                .add_layer(MasterPoolSinkLayer::deny_list(txsink_config.deny_list));
+                .add_layer(MasterPoolSinkLayer::deny_list(txsink_config.deny_list()));
+            tracing::info!(
+                "Add MasterPoolSinkLayer with deny list: {:?}",
+                txsink_config.deny_list().unwrap()
+            );
         } else {
             self.node.add_layer(MasterPoolSinkLayer::default());
         }
