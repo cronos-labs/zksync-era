@@ -289,31 +289,31 @@ impl MainNodeBuilder {
         };
 
         // On main node we always use master pool sink.
+        let mut master_pool_sink_layer = MasterPoolSinkLayer::default();
         if with_denylist {
             let txsink_config = try_load_config!(self.configs.api_config).tx_sink;
-            self.node
-                .add_layer(MasterPoolSinkLayer::deny_list(txsink_config.deny_list()));
+            master_pool_sink_layer = MasterPoolSinkLayer::deny_list(txsink_config.deny_list());
             tracing::info!(
                 "Add MasterPoolSinkLayer with deny list: {:?}",
                 txsink_config.deny_list().unwrap_or_default()
             );
-        } else {
-            self.node.add_layer(MasterPoolSinkLayer::default());
         }
 
-        self.node.add_layer(TxSenderLayer::new(
-            TxSenderConfig::new(
-                &sk_config,
-                &rpc_config,
-                try_load_config!(self.wallets.state_keeper)
-                    .fee_account
-                    .address(),
-                self.genesis_config.l2_chain_id,
-            ),
-            postgres_storage_caches_config,
-            rpc_config.vm_concurrency_limit(),
-            ApiContracts::load_from_disk_blocking(), // TODO (BFT-138): Allow to dynamically reload API contracts
-        ));
+        self.node
+            .add_layer(master_pool_sink_layer)
+            .add_layer(TxSenderLayer::new(
+                TxSenderConfig::new(
+                    &sk_config,
+                    &rpc_config,
+                    try_load_config!(self.wallets.state_keeper)
+                        .fee_account
+                        .address(),
+                    self.genesis_config.l2_chain_id,
+                ),
+                postgres_storage_caches_config,
+                rpc_config.vm_concurrency_limit(),
+                ApiContracts::load_from_disk_blocking(), // TODO (BFT-138): Allow to dynamically reload API contracts
+            ));
         Ok(self)
     }
 
