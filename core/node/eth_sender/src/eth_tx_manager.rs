@@ -141,11 +141,15 @@ impl EthTxManager {
                     .unwrap();
                 return Ok(EthFee {
                     base_fee_per_gas: std::cmp::max(
-                        previous_sent_tx.base_fee_per_gas + 100000000,
+                        previous_sent_tx.base_fee_per_gas
+                            + (previous_sent_tx.base_fee_per_gas / 10)
+                            + 1,
                         base_fee_per_gas,
                     ),
                     priority_fee_per_gas: std::cmp::max(
-                        previous_sent_tx.priority_fee_per_gas + 100000000,
+                        previous_sent_tx.priority_fee_per_gas
+                            + (previous_sent_tx.priority_fee_per_gas / 10)
+                            + 1,
                         priority_fee_per_gas,
                     ),
                     blob_base_fee_per_gas: std::cmp::max(
