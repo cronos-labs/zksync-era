@@ -48,6 +48,7 @@ impl EthTxManager {
         let fees_oracle = GasAdjusterFeesOracle {
             gas_adjuster,
             max_acceptable_priority_fee_in_gwei: config.max_acceptable_priority_fee_in_gwei,
+            max_acceptable_base_fee_in_wei: config.max_acceptable_base_fee_in_wei,
         };
         Self {
             l1_interface: Box::new(RealL1Interface {

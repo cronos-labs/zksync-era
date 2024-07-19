@@ -8,7 +8,7 @@ use zksync_eth_client::{ClientError, EnrichedClientError};
 use zksync_node_fee_model::l1_gas_price::L1TxParamsProvider;
 use zksync_types::eth_sender::TxHistory;
 
-use crate::EthSenderError;
+use crate::{EthSenderError, EthSenderError::ExceedMaxBaseFee};
 
 #[derive(Debug)]
 pub(crate) struct EthFees {
@@ -30,6 +30,7 @@ pub(crate) trait EthFeesOracle: 'static + Sync + Send + fmt::Debug {
 pub(crate) struct GasAdjusterFeesOracle {
     pub gas_adjuster: Arc<dyn L1TxParamsProvider>,
     pub max_acceptable_priority_fee_in_gwei: u64,
+    pub max_acceptable_base_fee_in_wei: u64,
 }
 
 impl GasAdjusterFeesOracle {
@@ -40,6 +41,16 @@ impl GasAdjusterFeesOracle {
         let base_fee_per_gas = self.gas_adjuster.get_blob_tx_base_fee();
         let priority_fee_per_gas = self.gas_adjuster.get_blob_tx_priority_fee();
         let blob_base_fee_per_gas = Some(self.gas_adjuster.get_blob_tx_blob_base_fee());
+
+        if base_fee_per_gas > self.max_acceptable_base_fee_in_wei {
+            tracing::info!(
+                    "base fee per gas: {} exceed max acceptable fee in configuration: {}, skip transaction",
+                    base_fee_per_gas,
+                    self.max_acceptable_base_fee_in_wei
+            );
+
+            return Err(ExceedMaxBaseFee);
+        }
 
         if let Some(previous_sent_tx) = previous_sent_tx {
             // for blob transactions on re-sending need to double all gas prices
@@ -67,13 +78,23 @@ impl GasAdjusterFeesOracle {
         previous_sent_tx: &Option<TxHistory>,
         time_in_mempool: u32,
     ) -> Result<EthFees, EthSenderError> {
-        let base_fee_per_gas = self.gas_adjuster.get_base_fee(time_in_mempool);
+        let mut base_fee_per_gas = self.gas_adjuster.get_base_fee(time_in_mempool);
         if let Some(previous_sent_tx) = previous_sent_tx {
             self.verify_base_fee_not_too_low_on_resend(
                 previous_sent_tx.id,
                 previous_sent_tx.base_fee_per_gas,
                 base_fee_per_gas,
             )?;
+        }
+
+        if base_fee_per_gas > self.max_acceptable_base_fee_in_wei {
+            tracing::info!(
+                    "base fee per gas: {} exceed max acceptable fee in configuration: {}, skip transaction",
+                    base_fee_per_gas,
+                    self.max_acceptable_base_fee_in_wei
+            );
+
+            return Err(ExceedMaxBaseFee);
         }
 
         let mut priority_fee_per_gas = self.gas_adjuster.get_priority_fee();
@@ -83,6 +104,12 @@ impl GasAdjusterFeesOracle {
             priority_fee_per_gas = max(
                 priority_fee_per_gas,
                 (previous_sent_tx.priority_fee_per_gas * 6) / 5 + 1,
+            );
+
+            // same for base_fee_per_gas but 10%
+            base_fee_per_gas = max(
+                base_fee_per_gas,
+                previous_sent_tx.base_fee_per_gas + (previous_sent_tx.base_fee_per_gas / 10) + 1,
             );
         }
 

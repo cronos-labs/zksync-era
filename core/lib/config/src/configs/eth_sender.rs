@@ -43,6 +43,7 @@ impl EthConfig {
                 signing_mode: SigningMode::PrivateKey,
                 gkms_op_key_name: None,
                 gkms_op_blob_key_name: None,
+                max_acceptable_base_fee_in_wei: 100000000000,
             }),
             gas_adjuster: Some(GasAdjusterConfig {
                 default_priority_fee_per_gas: 1000000000,
@@ -136,6 +137,9 @@ pub struct SenderConfig {
 
     /// Optional GCP KMS operation key name for Ethereum blobs.
     pub gkms_op_blob_key_name: Option<String>,
+
+    /// Max acceptable base fee the sender is allowed to use to send L1 txs.
+    pub max_acceptable_base_fee_in_wei: u64,
 }
 
 impl SenderConfig {
