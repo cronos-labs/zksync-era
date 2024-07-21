@@ -1,8 +1,11 @@
 use async_trait::async_trait;
 use zksync_types::{Address, EIP712TypedStructure, Eip712Domain, PackedEthSignature};
 
-pub use crate::{pk_signer::PrivateKeySigner, raw_ethereum_tx::TransactionParameters};
+pub use crate::{
+    gkms_signer::GKMSSigner, pk_signer::PrivateKeySigner, raw_ethereum_tx::TransactionParameters,
+};
 
+mod gkms_signer;
 mod pk_signer;
 mod raw_ethereum_tx;
 

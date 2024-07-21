@@ -36,7 +36,9 @@ use zksync_node_framework::{
         l1_gas::SequencerL1GasLayer,
         metadata_calculator::MetadataCalculatorLayer,
         object_store::ObjectStoreLayer,
-        pk_signing_eth_client::PKSigningEthClientLayer,
+        pk_signing_eth_client::{
+            PKSigningEthClientLayer, SigningEthClientType::PKSigningEthClient,
+        },
         pools_layer::PoolsLayerBuilder,
         proof_data_handler::ProofDataHandlerLayer,
         query_eth_client::QueryEthClientLayer,
@@ -94,6 +96,7 @@ impl MainNodeBuilder {
             ContractsConfig::from_env()?,
             genesis.l1_chain_id,
             wallets.eth_sender.context("Eth sender configs")?,
+            PKSigningEthClient,
         ));
         Ok(self)
     }

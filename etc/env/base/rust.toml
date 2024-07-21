@@ -59,6 +59,7 @@ vise_exporter=debug,\
 snapshots_creator=debug,\
 zksync_base_token_adjuster=debug,\
 zksync_external_price_api=debug,\
+zksync_eth_signer=info,\
 """
 
 # `RUST_BACKTRACE` variable
