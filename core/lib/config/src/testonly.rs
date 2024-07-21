@@ -11,7 +11,10 @@ use zksync_basic_types::{
 use zksync_consensus_utils::EncodeDist;
 use zksync_crypto_primitives::K256PrivateKey;
 
-use crate::configs::{self, eth_sender::PubdataSendingMode};
+use crate::configs::{
+    self,
+    eth_sender::{PubdataSendingMode, SigningMode},
+};
 
 trait Sample {
     fn sample(rng: &mut (impl Rng + ?Sized)) -> Self;
@@ -379,6 +382,9 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             l1_batch_min_age_before_execute_seconds: self.sample(rng),
             max_acceptable_priority_fee_in_gwei: self.sample(rng),
             pubdata_sending_mode: PubdataSendingMode::Calldata,
+            signing_mode: SigningMode::PrivateKey,
+            gkms_op_key_name: None,
+            gkms_op_blob_key_name: None,
         }
     }
 }

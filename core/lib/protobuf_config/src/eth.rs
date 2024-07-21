@@ -1,6 +1,6 @@
 use anyhow::Context as _;
 use zksync_config::configs::{self};
-use zksync_protobuf::{required, ProtoRepr};
+use zksync_protobuf::{read_optional, required, ProtoRepr};
 
 use crate::{proto::eth as proto, read_optional_repr};
 
@@ -40,6 +40,24 @@ impl proto::PubdataSendingMode {
             Self::Calldata => To::Calldata,
             Self::Blobs => To::Blobs,
             Self::Custom => To::Custom,
+        }
+    }
+}
+
+impl proto::SigningMode {
+    fn new(x: &configs::eth_sender::SigningMode) -> Self {
+        use configs::eth_sender::SigningMode as From;
+        match x {
+            From::PrivateKey => Self::PrivateKey,
+            From::GcloudKms => Self::GcloudKms,
+        }
+    }
+
+    fn parse(&self) -> configs::eth_sender::SigningMode {
+        use configs::eth_sender::SigningMode as To;
+        match self {
+            Self::PrivateKey => To::PrivateKey,
+            Self::GcloudKms => To::GcloudKms,
         }
     }
 }
@@ -111,6 +129,12 @@ impl ProtoRepr for proto::Sender {
                 .and_then(|x| Ok(proto::PubdataSendingMode::try_from(*x)?))
                 .context("pubdata_sending_mode")?
                 .parse(),
+            signing_mode: required(&self.signing_mode)
+                .and_then(|x| Ok(proto::SigningMode::try_from(*x)?))
+                .context("signing_mode")?
+                .parse(),
+            gkms_op_key_name: self.gkms_op_key_name.clone(),
+            gkms_op_blob_key_name: self.gkms_op_blob_key_name.clone(),
         })
     }
 
@@ -141,6 +165,9 @@ impl ProtoRepr for proto::Sender {
             pubdata_sending_mode: Some(
                 proto::PubdataSendingMode::new(&this.pubdata_sending_mode).into(),
             ),
+            signing_mode: Some(proto::SigningMode::new(&this.signing_mode).into()),
+            gkms_op_key_name: this.gkms_op_key_name.clone(),
+            gkms_op_blob_key_name: this.gkms_op_blob_key_name.clone(),
         }
     }
 }
