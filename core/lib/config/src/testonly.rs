@@ -385,6 +385,7 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             signing_mode: SigningMode::PrivateKey,
             gkms_op_key_name: None,
             gkms_op_blob_key_name: None,
+            max_acceptable_base_fee_in_wei: self.sample(rng),
         }
     }
 }
