@@ -135,6 +135,8 @@ impl ProtoRepr for proto::Sender {
                 .parse(),
             gkms_op_key_name: self.gkms_op_key_name.clone(),
             gkms_op_blob_key_name: self.gkms_op_blob_key_name.clone(),
+            max_acceptable_base_fee_in_wei: *required(&self.max_acceptable_base_fee_in_wei)
+                .context("max_acceptable_base_fee_in_wei")?,
         })
     }
 
@@ -168,6 +170,7 @@ impl ProtoRepr for proto::Sender {
             signing_mode: Some(proto::SigningMode::new(&this.signing_mode).into()),
             gkms_op_key_name: this.gkms_op_key_name.clone(),
             gkms_op_blob_key_name: this.gkms_op_blob_key_name.clone(),
+            max_acceptable_base_fee_in_wei: Some(this.max_acceptable_base_fee_in_wei),
         }
     }
 }

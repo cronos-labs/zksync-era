@@ -57,6 +57,9 @@ gkms_op_key_name = ""
 # The Google cloud KMS key name for eth sender operator blob
 gkms_op_blob_key_name = ""
 
+# Max acceptable base fee for sending tx to L1
+max_acceptable_base_fee_in_wei = 1000000000000
+
 [eth_sender.gas_adjuster]
 # Priority fee to be used by GasAdjuster (in wei).
 default_priority_fee_per_gas = 1_000_000_000

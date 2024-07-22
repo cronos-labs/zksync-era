@@ -55,6 +55,7 @@ message Sender {
   optional SigningMode signing_mode = 99; // required
   optional string gkms_op_key_name = 100; // optional;
   optional string gkms_op_blob_key_name = 101; // optional;
+  optional uint64 max_acceptable_base_fee_in_wei = 102; // required; wei
 }
 
 message GasAdjuster {
