@@ -54,6 +54,7 @@ message Sender {
   optional bool tx_aggregation_paused = 20; // required
   optional bool tx_aggregation_only_prove_and_execute = 21; // required
   optional SigningMode signing_mode = 99; // required
+  optional uint64 max_acceptable_base_fee_in_wei = 100; // required; wei
 }
 
 message GasAdjuster {
