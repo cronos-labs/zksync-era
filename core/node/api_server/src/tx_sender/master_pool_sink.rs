@@ -39,7 +39,7 @@ impl TxSink for MasterPoolSink {
         let address_and_nonce = (tx.initiator_account(), tx.nonce());
 
         if self.deny_list.contains(&address_and_nonce.0) {
-            return Err(SubmitTxError::SenderInDenyList(tx.initiator_account()));
+            return Err(SubmitTxError::SenderInDenyList(address_and_nonce.0));
         }
 
         let mut lock = self.inflight_requests.lock().await;
