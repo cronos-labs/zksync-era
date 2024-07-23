@@ -1,7 +1,8 @@
 use anyhow::Context as _;
 use zksync_config::configs::{
     api::{
-        ContractVerificationApiConfig, HealthCheckConfig, MerkleTreeApiConfig, Web3JsonRpcConfig,
+        ContractVerificationApiConfig, HealthCheckConfig, MerkleTreeApiConfig, TxSinkConfig,
+        Web3JsonRpcConfig,
     },
     ApiConfig, PrometheusConfig,
 };
@@ -15,6 +16,7 @@ impl FromEnv for ApiConfig {
             prometheus: PrometheusConfig::from_env().context("PrometheusConfig")?,
             healthcheck: HealthCheckConfig::from_env().context("HealthCheckConfig")?,
             merkle_tree: MerkleTreeApiConfig::from_env().context("MerkleTreeApiConfig")?,
+            tx_sink: TxSinkConfig::from_env().context("TxSinkConfig")?,
         })
     }
 }
@@ -41,6 +43,13 @@ impl FromEnv for MerkleTreeApiConfig {
     /// Loads configuration from env variables.
     fn from_env() -> anyhow::Result<Self> {
         envy_load("merkle_tree_api", "API_MERKLE_TREE_")
+    }
+}
+
+impl FromEnv for TxSinkConfig {
+    /// Loads configuration from env variables.
+    fn from_env() -> anyhow::Result<Self> {
+        envy_load("tx_sink", "API_TX_SINK_")
     }
 }
 
@@ -112,6 +121,9 @@ mod tests {
                 hard_time_limit_ms: Some(2_000),
             },
             merkle_tree: MerkleTreeApiConfig { port: 8082 },
+            tx_sink: TxSinkConfig {
+                deny_list: Some("0x1234567890abcdef".to_string()),
+            },
         }
     }
 
@@ -158,6 +170,7 @@ mod tests {
             API_HEALTHCHECK_SLOW_TIME_LIMIT_MS=250
             API_HEALTHCHECK_HARD_TIME_LIMIT_MS=2000
             API_MERKLE_TREE_PORT=8082
+            API_TX_SINK_DENY_LIST="0x1234567890abcdef"
         "#;
         lock.set_env(config);
 

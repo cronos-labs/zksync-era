@@ -1,4 +1,7 @@
-use std::collections::hash_map::{Entry, HashMap};
+use std::collections::{
+    hash_map::{Entry, HashMap},
+    HashSet,
+};
 
 use tokio::sync::Mutex;
 use zksync_dal::{transactions_dal::L2TxSubmissionResult, ConnectionPool, Core, CoreDal};
@@ -13,13 +16,15 @@ use crate::web3::metrics::API_METRICS;
 pub struct MasterPoolSink {
     master_pool: ConnectionPool<Core>,
     inflight_requests: Mutex<HashMap<(Address, Nonce), H256>>,
+    deny_list: HashSet<Address>,
 }
 
 impl MasterPoolSink {
-    pub fn new(master_pool: ConnectionPool<Core>) -> Self {
+    pub fn new(master_pool: ConnectionPool<Core>, deny_list: Option<HashSet<Address>>) -> Self {
         Self {
             master_pool,
             inflight_requests: Mutex::new(HashMap::new()),
+            deny_list: deny_list.unwrap_or_default(),
         }
     }
 }
@@ -32,6 +37,10 @@ impl TxSink for MasterPoolSink {
         execution_metrics: TransactionExecutionMetrics,
     ) -> Result<L2TxSubmissionResult, SubmitTxError> {
         let address_and_nonce = (tx.initiator_account(), tx.nonce());
+
+        if self.deny_list.contains(&address_and_nonce.0) {
+            return Err(SubmitTxError::SenderInDenyList(address_and_nonce.0));
+        }
 
         let mut lock = self.inflight_requests.lock().await;
         match lock.entry(address_and_nonce) {

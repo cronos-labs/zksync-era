@@ -218,7 +218,7 @@ impl MainNodeBuilder {
         let wallets = Wallets::from_env()?;
 
         // On main node we always use master pool sink.
-        self.node.add_layer(MasterPoolSinkLayer);
+        self.node.add_layer(MasterPoolSinkLayer::default());
         self.node.add_layer(TxSenderLayer::new(
             TxSenderConfig::new(
                 &state_keeper_config,

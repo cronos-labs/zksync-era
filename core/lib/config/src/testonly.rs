@@ -53,6 +53,7 @@ impl Distribution<configs::ApiConfig> for EncodeDist {
             prometheus: self.sample(rng),
             healthcheck: self.sample(rng),
             merkle_tree: self.sample(rng),
+            tx_sink: self.sample(rng),
         }
     }
 }
@@ -131,6 +132,14 @@ impl Distribution<configs::api::MerkleTreeApiConfig> for EncodeDist {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> configs::api::MerkleTreeApiConfig {
         configs::api::MerkleTreeApiConfig {
             port: self.sample(rng),
+        }
+    }
+}
+
+impl Distribution<configs::api::TxSinkConfig> for EncodeDist {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> configs::api::TxSinkConfig {
+        configs::api::TxSinkConfig {
+            deny_list: self.sample(rng),
         }
     }
 }

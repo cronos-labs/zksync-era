@@ -42,10 +42,9 @@ message Web3JsonRpc {
   repeated MaxResponseSizeOverride max_response_body_size_overrides = 31;
   repeated string api_namespaces = 32; // Optional, if empty all namespaces are available
   optional bool extended_api_tracing = 33; // optional, default false
-  reserved 15; reserved "l1_to_l2_transactions_compatibility_mode";
+  reserved 15;
+  reserved "l1_to_l2_transactions_compatibility_mode";
 }
-
-
 
 message HealthCheck {
   optional uint32 port = 1; // required; u16
@@ -57,9 +56,14 @@ message MerkleTreeApi {
   optional uint32 port = 1; // required; u16
 }
 
+message TxSink {
+  optional string deny_list = 1; // optional
+}
+
 message Api {
   optional Web3JsonRpc web3_json_rpc = 1; // required
   optional utils.Prometheus prometheus = 3; // required
   optional HealthCheck healthcheck = 4; // required
   optional MerkleTreeApi merkle_tree = 5; // required
+  optional TxSink tx_sink = 6; // optional
 }

@@ -63,7 +63,7 @@ pub async fn build_tx_sender(
     storage_caches: PostgresStorageCaches,
 ) -> anyhow::Result<(TxSender, VmConcurrencyBarrier)> {
     let sequencer_sealer = SequencerSealer::new(state_keeper_config.clone());
-    let master_pool_sink = MasterPoolSink::new(master_pool);
+    let master_pool_sink = MasterPoolSink::new(master_pool, None);
     let tx_sender_builder = TxSenderBuilder::new(
         tx_sender_config.clone(),
         replica_pool.clone(),

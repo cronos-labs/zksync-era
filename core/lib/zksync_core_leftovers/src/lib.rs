@@ -62,6 +62,8 @@ pub enum Component {
     BaseTokenRatioPersister,
     /// VM runner-based component that saves VM execution data for basic witness generation.
     VmRunnerBwip,
+    /// Component for filtering L2 transactions by denylist
+    TxSinkDenyList,
 }
 
 #[derive(Debug)]
@@ -106,6 +108,7 @@ impl FromStr for Components {
                 Ok(Components(vec![Component::BaseTokenRatioPersister]))
             }
             "vm_runner_bwip" => Ok(Components(vec![Component::VmRunnerBwip])),
+            "deny_list" => Ok(Components(vec![Component::TxSinkDenyList])),
             other => Err(format!("{} is not a valid component name", other)),
         }
     }

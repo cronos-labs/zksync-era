@@ -287,7 +287,7 @@ impl MainNodeBuilder {
         Ok(self)
     }
 
-    fn add_tx_sender_layer(mut self) -> anyhow::Result<Self> {
+    fn add_tx_sender_layer(mut self, with_denylist: bool) -> anyhow::Result<Self> {
         let sk_config = try_load_config!(self.configs.state_keeper_config);
         let rpc_config = try_load_config!(self.configs.api_config).web3_json_rpc;
         let postgres_storage_caches_config = PostgresStorageCachesConfig {
@@ -297,20 +297,31 @@ impl MainNodeBuilder {
         };
 
         // On main node we always use master pool sink.
-        self.node.add_layer(MasterPoolSinkLayer);
-        self.node.add_layer(TxSenderLayer::new(
-            TxSenderConfig::new(
-                &sk_config,
-                &rpc_config,
-                try_load_config!(self.wallets.state_keeper)
-                    .fee_account
-                    .address(),
-                self.genesis_config.l2_chain_id,
-            ),
-            postgres_storage_caches_config,
-            rpc_config.vm_concurrency_limit(),
-            ApiContracts::load_from_disk_blocking(), // TODO (BFT-138): Allow to dynamically reload API contracts
-        ));
+        let mut master_pool_sink_layer = MasterPoolSinkLayer::default();
+        if with_denylist {
+            let txsink_config = try_load_config!(self.configs.api_config).tx_sink;
+            master_pool_sink_layer = MasterPoolSinkLayer::deny_list(txsink_config.deny_list());
+            tracing::info!(
+                "Add MasterPoolSinkLayer with deny list: {:?}",
+                txsink_config.deny_list().unwrap_or_default()
+            );
+        }
+
+        self.node
+            .add_layer(master_pool_sink_layer)
+            .add_layer(TxSenderLayer::new(
+                TxSenderConfig::new(
+                    &sk_config,
+                    &rpc_config,
+                    try_load_config!(self.wallets.state_keeper)
+                        .fee_account
+                        .address(),
+                    self.genesis_config.l2_chain_id,
+                ),
+                postgres_storage_caches_config,
+                rpc_config.vm_concurrency_limit(),
+                ApiContracts::load_from_disk_blocking(), // TODO (BFT-138): Allow to dynamically reload API contracts
+            ));
         Ok(self)
     }
 
@@ -642,16 +653,22 @@ impl MainNodeBuilder {
                         .add_storage_initialization_layer(LayerKind::Task)?
                         .add_state_keeper_layer()?;
                 }
+                Component::TxSinkDenyList => {
+                    let with_denylist = true;
+                    self = self.add_tx_sender_layer(with_denylist)?;
+                }
                 Component::HttpApi => {
+                    let with_denylist = false;
                     self = self
-                        .add_tx_sender_layer()?
+                        .add_tx_sender_layer(with_denylist)?
                         .add_tree_api_client_layer()?
                         .add_api_caches_layer()?
                         .add_http_web3_api_layer()?;
                 }
                 Component::WsApi => {
+                    let with_denylist = false;
                     self = self
-                        .add_tx_sender_layer()?
+                        .add_tx_sender_layer(with_denylist)?
                         .add_tree_api_client_layer()?
                         .add_api_caches_layer()?
                         .add_ws_web3_api_layer()?;

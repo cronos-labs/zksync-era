@@ -11,6 +11,7 @@ fn test_encoding() {
     test_encode_all_formats::<ReprConv<proto::api::Web3JsonRpc>>(rng);
     test_encode_all_formats::<ReprConv<proto::api::HealthCheck>>(rng);
     test_encode_all_formats::<ReprConv<proto::api::MerkleTreeApi>>(rng);
+    test_encode_all_formats::<ReprConv<proto::api::TxSink>>(rng);
     test_encode_all_formats::<ReprConv<proto::api::Api>>(rng);
     test_encode_all_formats::<ReprConv<proto::utils::Prometheus>>(rng);
     test_encode_all_formats::<ReprConv<proto::chain::StateKeeper>>(rng);

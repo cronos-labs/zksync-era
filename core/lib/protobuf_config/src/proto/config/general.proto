@@ -2,25 +2,25 @@ syntax = "proto3";
 
 package zksync.config.general;
 
-import "zksync/config/prover.proto";
 import "zksync/config/api.proto";
+import "zksync/config/base_token_adjuster.proto";
 import "zksync/config/chain.proto";
-import "zksync/config/contract_verifier.proto";
-import "zksync/config/database.proto";
 import "zksync/config/circuit_breaker.proto";
+import "zksync/config/commitment_generator.proto";
+import "zksync/config/contract_verifier.proto";
+import "zksync/config/da_dispatcher.proto";
+import "zksync/config/database.proto";
 import "zksync/config/eth_sender.proto";
+import "zksync/config/external_price_api_client.proto";
 import "zksync/config/house_keeper.proto";
+import "zksync/config/object_store.proto";
 import "zksync/config/observability.proto";
+import "zksync/config/prover.proto";
+import "zksync/config/pruning.proto";
+import "zksync/config/snapshot_recovery.proto";
 import "zksync/config/snapshots_creator.proto";
 import "zksync/config/utils.proto";
-import "zksync/config/da_dispatcher.proto";
 import "zksync/config/vm_runner.proto";
-import "zksync/config/commitment_generator.proto";
-import "zksync/config/snapshot_recovery.proto";
-import "zksync/config/pruning.proto";
-import "zksync/config/object_store.proto";
-import "zksync/config/base_token_adjuster.proto";
-import "zksync/config/external_price_api_client.proto";
 
 message GeneralConfig {
   optional config.database.Postgres postgres = 1;
