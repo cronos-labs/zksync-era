@@ -17,6 +17,7 @@ impl ProtoRepr for proto::Api {
             prometheus: read_required_repr(&self.prometheus).context("prometheus")?,
             healthcheck: read_required_repr(&self.healthcheck).context("healthcheck")?,
             merkle_tree: read_required_repr(&self.merkle_tree).context("merkle_tree")?,
+            tx_sink: read_required_repr(&self.tx_sink).context("tx_sink")?,
         })
     }
 
@@ -26,6 +27,7 @@ impl ProtoRepr for proto::Api {
             prometheus: Some(ProtoRepr::build(&this.prometheus)),
             healthcheck: Some(ProtoRepr::build(&this.healthcheck)),
             merkle_tree: Some(ProtoRepr::build(&this.merkle_tree)),
+            tx_sink: Some(ProtoRepr::build(&this.tx_sink)),
         }
     }
 }
@@ -268,6 +270,21 @@ impl ProtoRepr for proto::MerkleTreeApi {
     fn build(this: &Self::Type) -> Self {
         Self {
             port: Some(this.port.into()),
+        }
+    }
+}
+
+impl ProtoRepr for proto::TxSink {
+    type Type = api::TxSinkConfig;
+    fn read(&self) -> anyhow::Result<Self::Type> {
+        Ok(Self::Type {
+            deny_list: self.deny_list.clone(),
+        })
+    }
+
+    fn build(this: &Self::Type) -> Self {
+        Self {
+            deny_list: this.deny_list.clone(),
         }
     }
 }

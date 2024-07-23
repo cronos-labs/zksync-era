@@ -1,4 +1,7 @@
+use std::collections::HashSet;
+
 use zksync_node_api_server::tx_sender::master_pool_sink::MasterPoolSink;
+use zksync_types::Address;
 
 use crate::{
     implementations::resources::{
@@ -10,7 +13,19 @@ use crate::{
 };
 
 /// Wiring layer for [`MasterPoolSink`], [`TxSink`](zksync_node_api_server::tx_sender::tx_sink::TxSink) implementation.
-pub struct MasterPoolSinkLayer;
+pub struct MasterPoolSinkLayer {
+    deny_list: Option<HashSet<Address>>,
+}
+
+impl MasterPoolSinkLayer {
+    pub fn deny_list(deny_list: Option<HashSet<Address>>) -> Self {
+        Self { deny_list }
+    }
+
+    pub fn default() -> Self {
+        Self { deny_list: None }
+    }
+}
 
 #[derive(Debug, FromContext)]
 #[context(crate = crate)]
@@ -36,7 +51,7 @@ impl WiringLayer for MasterPoolSinkLayer {
     async fn wire(self, input: Self::Input) -> Result<Self::Output, WiringError> {
         let pool = input.master_pool.get().await?;
         Ok(Output {
-            tx_sink: MasterPoolSink::new(pool).into(),
+            tx_sink: MasterPoolSink::new(pool, self.deny_list).into(),
         })
     }
 }
