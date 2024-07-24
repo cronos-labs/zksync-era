@@ -46,7 +46,7 @@
 
           packages = {
             # to ease potential cross-compilation, the overlay is used
-            inherit (appliedOverlay.zksync-era) zksync_server tee_prover container-tee_prover-azure container-tee_prover-dcap;
+            inherit (appliedOverlay.zksync-era) zksync_server tee_prover container-tee_prover-azure container-tee_prover-dcap prover;
             default = appliedOverlay.zksync-era.zksync_server;
           };
 
@@ -143,6 +143,13 @@
               inherit tee_prover;
               isAzure = false;
               container-name = "zksync-tee_prover-dcap";
+            };
+
+            prover = pkgs.callPackage ./etc/nix/prover.nix {
+              inherit cargoArtifacts;
+              inherit versionSuffix;
+              inherit craneLib;
+              inherit commonArgs;
             };
           };
         };
