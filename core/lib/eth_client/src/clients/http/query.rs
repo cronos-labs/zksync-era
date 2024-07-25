@@ -79,7 +79,6 @@ where
         latency.observe();
         Ok(tx)
     }
-
     async fn get_pending_block_base_fee_per_gas(&self) -> EnrichedClientResult<U256> {
         COUNTERS.call[&(Method::PendingBlockBaseFee, self.component())].inc();
         let latency = LATENCIES.direct[&Method::PendingBlockBaseFee].start();
@@ -313,7 +312,7 @@ where
         let chunk_end = (chunk_start + FEE_HISTORY_MAX_REQUEST_CHUNK).min(upto_block);
         let chunk_size = chunk_end - chunk_start;
 
-        let fee_history = client
+        let mut fee_history = client
             .fee_history(
                 U64::from(chunk_size),
                 web3::BlockNumber::from(chunk_end),
@@ -329,11 +328,8 @@ where
         // prior to EIP-4844.
         // https://ethereum.github.io/execution-apis/api-documentation/
         if fee_history.base_fee_per_gas.len() != fee_history.base_fee_per_blob_gas.len() {
-            tracing::error!(
-                "base_fee_per_gas and base_fee_per_blob_gas have different lengths: {} and {}",
-                fee_history.base_fee_per_gas.len(),
-                fee_history.base_fee_per_blob_gas.len()
-            );
+            fee_history.base_fee_per_blob_gas =
+                vec![U256::from(0); fee_history.base_fee_per_gas.len()];
         }
 
         for (base, blob) in fee_history
