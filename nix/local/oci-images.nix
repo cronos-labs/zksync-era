@@ -1,9 +1,9 @@
 let
-  tag = "v24.2.0";
+  tag = "v24.9.0";
   base-image = inputs.n2c.packages.nix2container.pullImage {
     imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-    imageDigest = "sha256:840122a8d59f0ace77359c2b39b0bd9f2176017b20425b9b6c8ecf77e4bcda1f";
-    sha256 = "sha256-whqlf7FEGYqCPkU/bWBQp1+f/7JeljcoJln3ctYK/H0=";
+    imageDigest = "sha256:aeaa2825da75b00fbd63e5f7f9dbd825098b1b068ed7397a479e9860b077af42";
+    sha256 = "";
   };
   db = inputs.nixpkgs.runCommand "db" {} ''
     mkdir -p $out/db
