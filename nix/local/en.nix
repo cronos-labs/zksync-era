@@ -1,7 +1,7 @@
 let
   zkevm = inputs.ml-zksync-24-9-0;
 
-  cargoHash = "";
+  cargoHash = "sha256-OLCQOSCuqCuw85GMPzfGZbPYrj4ysq0dKY6/v/rQm40=";
 
   pkgs = import inputs.nixpkgs {
     inherit (inputs.nixpkgs) system;
