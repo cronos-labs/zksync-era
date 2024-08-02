@@ -126,11 +126,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1669263024,
-        "narHash": "sha256-E/+23NKtxAqYG/0ydYgxlgarKnxmDbg6rCMWnOBqn9Q=",
+        "lastModified": 1693483555,
+        "narHash": "sha256-Beq4WhSeH3jRTZgC1XopTSU10yLpK1nmMcnGoXO0XYo=",
         "owner": "divnix",
         "repo": "incl",
-        "rev": "ce7bebaee048e4cd7ebdb4cee7885e00c4e2abca",
+        "rev": "526751ad3d1e23b07944b14e3f6b7a5948d3007b",
         "type": "github"
       },
       "original": {
@@ -141,11 +141,11 @@
     },
     "lib": {
       "locked": {
-        "lastModified": 1694306727,
-        "narHash": "sha256-26fkTOJOI65NOTNKFvtcJF9mzzf/kK9swHzfYt1Dl6Q=",
+        "lastModified": 1722128034,
+        "narHash": "sha256-L8rwzYPsLo/TYtydPJoQyYOfetuiyQYnTWYcyB8UE/s=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "c30b6a84c0b84ec7aecbe74466033facc9ed103f",
+        "rev": "d15f6f6021693898fcd2c6a9bb13707383da9bbc",
         "type": "github"
       },
       "original": {
@@ -184,6 +184,23 @@
       "original": {
         "owner": "matter-labs",
         "ref": "core-v24.6.0",
+        "repo": "zksync-era",
+        "type": "github"
+      }
+    },
+    "ml-zksync-24-9-0": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1720621509,
+        "narHash": "sha256-YKThINy36KvtXdSQXNNTSg5WznOmbReGTgf1ounnvx4=",
+        "owner": "matter-labs",
+        "repo": "zksync-era",
+        "rev": "9cdee2c1d3574abb0d8e116c63262f058ebae0a2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "matter-labs",
+        "ref": "core-v24.9.0",
         "repo": "zksync-era",
         "type": "github"
       }
@@ -243,11 +260,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1720955038,
-        "narHash": "sha256-GaliJqfFwyYxReFywxAa8orCO+EnDq2NK2F+5aSc8vo=",
+        "lastModified": 1722415718,
+        "narHash": "sha256-5US0/pgxbMksF92k1+eOa8arJTJiPvsdZj9Dl+vJkM4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "aa247c0c90ecf4ae7a032c54fdc21b91ca274062",
+        "rev": "c3392ad349a5227f4a3464dce87bcc5046692fce",
         "type": "github"
       },
       "original": {
@@ -290,11 +307,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1708343346,
-        "narHash": "sha256-qlzHvterVRzS8fS0ophQpkh0rqw0abijHEOAKm0HmV0=",
+        "lastModified": 1720535198,
+        "narHash": "sha256-zwVvxrdIzralnSbcpghA92tWu2DV2lwv89xZc8MTrbg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9312b935a538684049cb668885e60f15547d4c5f",
+        "rev": "205fd4226592cc83fd4c0885a3e4c9c400efabb5",
         "type": "github"
       },
       "original": {
@@ -368,6 +385,7 @@
       "inputs": {
         "ml-zksync-24-3-0": "ml-zksync-24-3-0",
         "ml-zksync-24-6-0": "ml-zksync-24-6-0",
+        "ml-zksync-24-9-0": "ml-zksync-24-9-0",
         "n2c": "n2c",
         "nixpkgs": "nixpkgs_2",
         "rust-overlay": "rust-overlay",
@@ -375,8 +393,7 @@
         "zkevm-23-0-0": "zkevm-23-0-0",
         "zkevm-24-0-0": "zkevm-24-0-0",
         "zkevm-24-0-0-validium-fix": "zkevm-24-0-0-validium-fix",
-        "zkevm-24-2-0": "zkevm-24-2-0",
-        "zkevm-24-2-0-add-log-seal-criteria": "zkevm-24-2-0-add-log-seal-criteria"
+        "zkevm-24-2-0": "zkevm-24-2-0"
       }
     },
     "rust-overlay": {
@@ -384,11 +401,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1721010111,
-        "narHash": "sha256-GuPw2xhJZ+eszIJFu7z7AtqUmirSWPHpxuCpG6dSOic=",
+        "lastModified": 1722565199,
+        "narHash": "sha256-2eek4vZKsYg8jip2WQWvAOGMMboQ40DIrllpsI6AlU4=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "3ef018b6d0f62eb59580a8e9fe141e37bf1d972d",
+        "rev": "a9cd2009fb2eeacfea785b45bdbbc33612bba1f1",
         "type": "github"
       },
       "original": {
@@ -435,11 +452,11 @@
         "yants": "yants"
       },
       "locked": {
-        "lastModified": 1720302576,
-        "narHash": "sha256-8HgfMr07vNTB2xp+vRBVmJ0A6ctX/oa/QqFBlqqmz4M=",
+        "lastModified": 1722333425,
+        "narHash": "sha256-C9w5BNBMq1rZ6FqP1eJoIuRzyIhGIGC0GV8qys38LKQ=",
         "owner": "divnix",
         "repo": "std",
-        "rev": "4e20f558f00bc8d52b0fadc468b872d280ca2d34",
+        "rev": "f8f6f70cdc9234d36d3d445d99a60b9267644df8",
         "type": "github"
       },
       "original": {
@@ -553,33 +570,16 @@
     "zkevm-24-2-0": {
       "flake": false,
       "locked": {
-        "lastModified": 1721023294,
-        "narHash": "sha256-3PE8FAfR9PlAAQgV2L9m2MVw7YQ6+7ia1TGqQSy0YHg=",
+        "lastModified": 1721191958,
+        "narHash": "sha256-Cs8VJSWL0L66xmKh3zdjSOYUEKDf/PQ9Fq0aexbl+eQ=",
         "owner": "cronos-labs",
         "repo": "cronos-zkevm",
-        "rev": "38de7b9c612215fcc54f3bb99b6c7b5dc4292e05",
+        "rev": "d4002d83852bad570d6e9bcaa636a7fc4a31ef4c",
         "type": "github"
       },
       "original": {
         "owner": "cronos-labs",
         "ref": "testnet-v24.2.0",
-        "repo": "cronos-zkevm",
-        "type": "github"
-      }
-    },
-    "zkevm-24-2-0-add-log-seal-criteria": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1716435688,
-        "narHash": "sha256-UM8VeALm3SxZwMXUgW+KX7VntEjbClarQOCwnB1Y3wo=",
-        "owner": "cronos-labs",
-        "repo": "cronos-zkevm",
-        "rev": "2a68c69445f898bd5660c2c753cbd16f4a6b816e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cronos-labs",
-        "ref": "thomas/add-log-seal-criteria",
         "repo": "cronos-zkevm",
         "type": "github"
       }
