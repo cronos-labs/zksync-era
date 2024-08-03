@@ -9,7 +9,7 @@ let
   base-image-testnet = inputs.n2c.packages.nix2container.pullImage {
     imageName = "ghcr.io/cronos-labs/zkevm-base-image";
     imageDigest = "sha256:28a7022cda8e5aa6abffd296213b9d01261846a9557d66f86dcdf6720600dbec";
-    sha256 = "";
+    sha256 = "sha256-L1kADXnCMZeyXPihtGGFCrB/9b/N3RWW9NCLyrjclKE=";
   };
   db = inputs.nixpkgs.runCommand "db" {} ''
     mkdir -p $out/db
