@@ -31,7 +31,7 @@ in {
     options.fromImage = base-image;
   };
   gh-external-node-testnet = inputs.std.lib.ops.mkStandardOCI {
-    inherit tag-testnet;
+    tag = tag-testnet;
 
     name = "ghcr.io/cronos-labs/external-node";
     setup = [db];
