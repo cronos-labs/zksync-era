@@ -1,6 +1,6 @@
 let
   tag = "v24.9.0";
-  tag-testnet = "v24.9.0-testnet";
+  tag-testnet = "v24.9.0-testnet-v2";
   base-image = inputs.n2c.packages.nix2container.pullImage {
     imageName = "ghcr.io/cronos-labs/zkevm-base-image";
     imageDigest = "sha256:aeaa2825da75b00fbd63e5f7f9dbd825098b1b068ed7397a479e9860b077af42";
