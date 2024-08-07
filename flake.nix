@@ -13,7 +13,7 @@
   inputs.zkevm-24-0-0.url = "github:cronos-labs/cronos-zkevm/testnet-v24.0.0";
   inputs.zkevm-24-0-0-validium-fix.url = "github:cronos-labs/cronos-zkevm/testnet-v24.0.0-validium-fix";
   inputs.zkevm-24-2-0.url = "github:cronos-labs/cronos-zkevm/testnet-v24.2.0";
-  #inputs.zkevm-24-2-0-add-log-seal-criteria.url = "github:cronos-labs/cronos-zkevm/thomas/add-log-seal-criteria";
+  inputs.zkevm-24-9-0-testnet.url = "github:cronos-labs/cronos-zkevm/testnet-v24.9.0";
 
   inputs.ml-zksync-24-3-0.flake = false;
   inputs.ml-zksync-24-6-0.flake = false;
@@ -22,7 +22,6 @@
   inputs.zkevm-24-0-0.flake = false;
   inputs.zkevm-24-0-0-validium-fix.flake = false;
   inputs.zkevm-24-2-0.flake = false;
-  #inputs.zkevm-24-2-0-add-log-seal-criteria.flake = false;
 
   outputs = {
     self,
@@ -37,9 +36,10 @@
         (installables "en" {ci.build = false;})
         (installables "prover" {ci.build = false;})
         (installables "server" {ci.build = false;})
+        (installables "packages")
         (runnables "operables")
       ];
     } {
-      packages = std.harvest self [["local" "en"] ["local" "prover"] ["local" "server"]];
+      packages = std.harvest self [["local" "en"] ["local" "prover"] ["local" "server"] ["local" "packages"]];
     };
 }

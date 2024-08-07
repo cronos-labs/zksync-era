@@ -42,7 +42,7 @@ in {
         mode = "0777";
       }
     ];
-    operable = cell.operables.external-node;
+    operable = cell.operables.external-node-testnet;
     options.fromImage = base-image-testnet;
   };
 }
