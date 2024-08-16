@@ -50,7 +50,7 @@
           inherit system;
           overlays = [(import inputs.rust-overlay)];
         };
-        en = import ./nix/local/en2.nix {inherit pkgs;};
+        en = import ./nix/local/en2.nix {inherit pkgs inputs;};
       in
         with pkgs; {
           packages.docker-aarch64-mainnet = dockerTools.buildImage {
