@@ -48,7 +48,7 @@
         pkgs = import inputs.nixpkgs {
           crossSystem = "aarch64-linux";
           inherit system;
-          overlays = [(import rust-overlay)];
+          overlays = [(import inputs.rust-overlay)];
         };
         en = import ./nix/local/en2.nix {inherit pkgs;};
       in
