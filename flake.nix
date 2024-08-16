@@ -1,4 +1,5 @@
 {
+  inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.n2c.url = "github:nlewo/nix2container";
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
@@ -24,6 +25,7 @@
   inputs.zkevm-24-2-0.flake = false;
 
   outputs = {
+    flake-utils,
     self,
     std,
     ...
@@ -41,5 +43,28 @@
       ];
     } {
       packages = std.harvest self [["local" "en"] ["local" "prover"] ["local" "server"] ["local" "packages"]];
-    };
+    } (
+      flake-utils.lib.eachDefaultSystem (system: let
+        pkgs = import inputs.nixpkgs {
+          crossSystem = "aarch64-linux";
+          inherit system;
+          overlays = [(import rust-overlay)];
+        };
+        en = import ./nix/local/en2.nix {inherit pkgs;};
+      in
+        with pkgs; {
+          packages.docker-aarch64-mainnet = dockerTools.buildImage {
+            name = "ghci.io/cronos-labs/external-node";
+            tag = "v24.9.0-mainnet";
+            copyToRoot = buildEnv {
+              name = "image-root";
+              paths = [dockerTools.caCertificates bashInteractive coreutils en.en.external_node];
+            };
+            extraCommands = ''
+              mkdir -p /db
+              chmod 777 /db
+            '';
+          };
+        })
+    );
 }
