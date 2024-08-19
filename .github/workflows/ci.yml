@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  MAINNET_VERSION: v24.9.0
+
 jobs:
   nix-build-aarch64:
     runs-on: ubuntu-latest
@@ -44,10 +47,10 @@ jobs:
     - run: |
         nix build .#packages.aarch64-linux.mainnet
         docker load < result
-        docker tag mainnet:nix ghcr.io/cronos-labs/external-node:mainnet-v24.9.0-aarch64
-        docker push ghcr.io/cronos-labs/external-node:mainnet-v24.9.0-aarch64
-        docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-v24.9.0 ghcr.io/cronos-labs/mainnet-v24.9.0-aarch64
-        docker manifest push ghcr.io/cronos-labs/external-node:mainnet-v24.9.0
+        docker tag mainnet:nix ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-aarch64
+        docker push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-aarch64
+        docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/mainnet-$MAINNET_VERSION-aarch64
+        docker manifest push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION
 
   nix-build-amd64:
     runs-on: ubuntu-latest
@@ -80,7 +83,7 @@ jobs:
     - run: |
         nix build .#packages.x86_64-linux.mainnet
         docker load < result
-        docker tag mainnet:nix ghcr.io/cronos-labs/external-node:mainnet-v24.9.0-amd64
-        docker push ghcr.io/cronos-labs/external-node:mainnet-v24.9.0-amd64
-        docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-v24.9.0 ghcr.io/cronos-labs/mainnet-v24.9.0-amd64
-        docker manifest push ghcr.io/cronos-labs/external-node:mainnet-v24.9.0
+        docker tag mainnet:nix ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
+        docker push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
+        docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/mainnet-$MAINNET_VERSION-amd64
+        docker manifest push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION
