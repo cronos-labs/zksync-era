@@ -34,7 +34,7 @@
         external-node = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
-          cargoHash = "sha256-7CO48+RFqlhm+/6QVNyX8059orU9DhrzLbZyEA/M0hg=";
+          cargoHash = "sha256-VercmY4EjkkTbcvHV/aH1SRNm84XzAjzgLalT2ESYJo=";
           doCheck = false;
           nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
           pname = "external-node";
