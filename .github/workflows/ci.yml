@@ -39,7 +39,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
-      docker pull ghcr.io/cronos-labs/zkevm-base-image:mainnet-$MAINNET_VERSION
+        docker pull ghcr.io/cronos-labs/zkevm-base-image:mainnet-$MAINNET_VERSION
     - run: >
           nix run github:Mic92/nix-fast-build
           -- --skip-cached --no-nom
@@ -77,7 +77,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
-      docker pull ghcr.io/cronos-labs/zkevm-base-image:mainnet-$MAINNET_VERSION
+        docker pull ghcr.io/cronos-labs/zkevm-base-image:mainnet-$MAINNET_VERSION
     - run: >
           nix run github:Mic92/nix-fast-build
           -- --skip-cached --no-nom
