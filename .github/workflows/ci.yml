@@ -27,12 +27,9 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: nixbuild/nix-quick-install-action@master
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        extra-conf: |
-          extra-platforms = aarch64-linux
-          extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
+        nix_conf: extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
@@ -66,11 +63,9 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: nixbuild/nix-quick-install-action@master
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        extra-conf: |
-          extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
+        nix_conf: extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
