@@ -28,13 +28,13 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
-        cp $HOME/.docker/config.json /etc/docker/config.json
+        cp $HOME/.docker/config.json /etc/nix/docker/config.json
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         extra-conf: |
           extra-platforms = aarch64-linux
-          extra-sandbox-paths = /etc/docker/config.json=/etc/docker/config.json
+          extra-sandbox-paths = /etc/docker/config.json=/etc/nix/docker/config.json
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
@@ -69,12 +69,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
-        cp $HOME/.docker/config.json /etc/docker/config.json
+        cp $HOME/.docker/config.json /etc/nix/docker/config.json
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         extra-conf: |
-          extra-sandbox-paths = /etc/docker/config.json=/etc/docker/config.json
+          extra-sandbox-paths = /etc/docker/config.json=/etc/nix/docker/config.json
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
