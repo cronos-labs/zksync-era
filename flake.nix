@@ -25,7 +25,7 @@
           cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era + /rust-toolchain);
           rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era + /rust-toolchain);
         };
-        base-image = dockerTools.pullImage {
+        base-image-mainnet = dockerTools.pullImage {
           finalImageTag = "mainnet-v24.9.0";
           imageDigest = "sha256:aeaa2825da75b00fbd63e5f7f9dbd825098b1b068ed7397a479e9860b077af42";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
@@ -45,7 +45,7 @@
         packages.mainnet = dockerTools.buildImage {
           name = "mainnet";
           tag = "nix";
-          fromImage = mainnet;
+          fromImage = base-image-mainnet;
           copyToRoot = buildEnv {
             name = "image-root";
             paths = [
