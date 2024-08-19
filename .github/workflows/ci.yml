@@ -29,6 +29,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
         ls -l $HOME/.docker
+        echo $HOME
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
