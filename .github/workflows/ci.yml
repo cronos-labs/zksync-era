@@ -27,6 +27,8 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - run: |
+        ls -l $HOME/.docker
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
