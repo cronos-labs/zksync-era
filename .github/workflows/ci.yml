@@ -33,17 +33,17 @@ jobs:
           -- --gc-roots-dir gcroot
           --flake
           ".#packages.aarch64-linux"
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - run: >
           nix run github:Mic92/nix-fast-build
           -- --skip-cached --no-nom
           --systems aarch64-linux
           --flake
           ".#packages.aarch64-linux"
-    - uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
         nix build .#packages.aarch64-linux.mainnet
         docker load < result
@@ -69,17 +69,17 @@ jobs:
           -- --gc-roots-dir gcroot
           --flake
           ".#packages.x86_64-linux"
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - run: >
           nix run github:Mic92/nix-fast-build
           -- --skip-cached --no-nom
           --systems x86_64-linux
           --flake
           ".#packages.x86_64-linux"
-    - uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
         nix build .#packages.x86_64-linux.mainnet
         docker load < result
