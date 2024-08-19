@@ -28,6 +28,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
+        mkdir -p /etc/nix/docker
         cp $HOME/.docker/config.json /etc/nix/docker/config.json
     - uses: DeterminateSystems/nix-installer-action@main
       with:
@@ -69,6 +70,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - run: |
+        mkdir -p /etc/nix/docker
         cp $HOME/.docker/config.json /etc/nix/docker/config.json
     - uses: DeterminateSystems/nix-installer-action@main
       with:
