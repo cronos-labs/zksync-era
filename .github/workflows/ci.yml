@@ -50,6 +50,7 @@ jobs:
         docker tag mainnet:nix ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-aarch64
         docker push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-aarch64
         docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-aarch64
+        docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
         docker manifest push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION
 
   nix-build-amd64:
