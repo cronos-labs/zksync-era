@@ -38,7 +38,7 @@
           finalImageTag = "testnet-v24.9.0";
           imageDigest = "sha256:28a7022cda8e5aa6abffd296213b9d01261846a9557d66f86dcdf6720600dbec";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "";
+          sha256 = "sha256-HEvngk2tYM/0jMEA1it5qRiuFBRSt9zYTOJ0VHApFQ4=";
         };
         external-node = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
