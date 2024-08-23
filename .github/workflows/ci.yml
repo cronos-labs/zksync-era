@@ -11,6 +11,7 @@ concurrency:
 
 env:
   MAINNET_VERSION: v24.9.0
+  TESTNET_VERSION: v24.9.0
 
 jobs:
   nix-build-aarch64:
@@ -53,6 +54,14 @@ jobs:
         docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
         docker manifest push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION
 
+        nix build .#packages.aarch64-linux.testnet
+        docker load < result
+        docker tag testnet:nix ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-aarch64
+        docker push ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-aarch64
+        docker manifest create --amend ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-aarch64
+        docker manifest create --amend ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-amd64
+        docker manifest push ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION
+
   nix-build-amd64:
     runs-on: ubuntu-latest
 
@@ -89,3 +98,10 @@ jobs:
         docker push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
         docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
         docker manifest push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION
+
+        nix build .#packages.x86_64-linux.testnet
+        docker load < result
+        docker tag testnet:nix ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-amd64
+        docker push ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-amd64
+        docker manifest create --amend ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-amd64
+        docker manifest push ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION
