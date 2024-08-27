@@ -60,7 +60,7 @@
             exec ${external-node}/bin/zksync_external_node "$@"
           '';
         };
-        config.Cmd = ["${start}/bin/start.sh"];
+        config.Entrypoint = ["${start}/bin/start.sh"];
         copyToRoot = buildEnv {
           name = "image-root";
           paths = [
