@@ -50,42 +50,37 @@
           src = inputs.zksync-era + /.;
           version = "dummy";
         };
-      in {
-        packages.mainnet = dockerTools.buildImage {
-          name = "mainnet";
-          tag = "nix";
-          fromImage = base-image-mainnet;
-          copyToRoot = buildEnv {
-            name = "image-root";
-            paths = [
-              bashInteractive
-              coreutils
-              dockerTools.caCertificates
-            ];
-          };
-          config.Cmd = pkgs.writeScript "cmd" ''
+        start = writeTextFile {
+          destination = "/bin/start.sh";
+          executable = true;
+          name = "start.sh";
+          text = ''
             #!${bash}/bin/bash
             ${sqlx-cli}/bin/sqlx database setup
             exec ${external-node}/bin/zksync_external_node "$@"
           '';
         };
+        config.Cmd = ["${start}/bin/start.sh"];
+        copyToRoot = buildEnv {
+          name = "image-root";
+          paths = [
+            bashInteractive
+            coreutils
+            dockerTools.caCertificates
+          ];
+        };
+      in {
+        packages.mainnet = dockerTools.buildImage {
+          name = "mainnet";
+          tag = "nix";
+          fromImage = base-image-mainnet;
+          inherit config copyToRoot;
+        };
         packages.testnet = dockerTools.buildImage {
           name = "testnet";
           tag = "nix";
           fromImage = base-image-testnet;
-          copyToRoot = buildEnv {
-            name = "image-root";
-            paths = [
-              bashInteractive
-              coreutils
-              dockerTools.caCertificates
-            ];
-          };
-          config.Cmd = pkgs.writeScript "cmd" ''
-            #!${bash}/bin/bash
-            ${sqlx-cli}/bin/sqlx database setup
-            exec ${external-node}/bin/zksync_external_node "$@"
-          '';
+          inherit config copyToRoot;
         };
       });
 }
