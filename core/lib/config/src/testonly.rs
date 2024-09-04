@@ -1145,6 +1145,15 @@ impl Distribution<configs::GeneralConfig> for EncodeDist {
             external_proof_integration_api_config: self.sample(rng),
             experimental_vm_config: self.sample(rng),
             prover_job_monitor_config: self.sample(rng),
+            tx_sink_config: self.sample(rng),
+        }
+    }
+}
+
+impl Distribution<configs::TxSinkConfig> for EncodeDist {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> configs::TxSinkConfig {
+        configs::TxSinkConfig {
+            deny_list: self.sample(rng),
         }
     }
 }

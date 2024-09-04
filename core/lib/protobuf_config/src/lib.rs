@@ -35,6 +35,7 @@ mod prover_job_monitor;
 mod snapshot_recovery;
 #[cfg(test)]
 mod tests;
+mod tx_sink;
 mod utils;
 mod vm_runner;
 mod wallets;

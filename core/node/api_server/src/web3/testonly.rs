@@ -18,7 +18,7 @@ use zksync_types::{
 use super::{metrics::ApiTransportLabel, *};
 use crate::{
     execution_sandbox::{testonly::MockOneshotExecutor, TransactionExecutor},
-    tx_sender::TxSenderConfig,
+    tx_sender::{TxSenderBuilderConfigs, TxSenderConfig},
 };
 
 const TEST_TIMEOUT: Duration = Duration::from_secs(90);
@@ -65,15 +65,20 @@ pub(crate) async fn create_test_tx_sender(
         l2_chain_id,
     );
 
+    let config = TxSenderBuilderConfigs {
+        tx_sender_config: tx_sender_config.clone(),
+        web3_json_config: web3_config.clone(),
+        state_keeper_config: state_keeper_config.clone(),
+        tx_sink_config: None,
+    };
+
     let storage_caches = PostgresStorageCaches::new(1, 1);
     let batch_fee_model_input_provider = Arc::new(MockApiBatchFeeParamsProvider {
         inner: MockBatchFeeParamsProvider::default(),
         pool: pool.clone(),
     });
     let (mut tx_sender, vm_barrier) = crate::tx_sender::build_tx_sender(
-        &tx_sender_config,
-        &web3_config,
-        &state_keeper_config,
+        config,
         pool.clone(),
         pool,
         batch_fee_model_input_provider,
