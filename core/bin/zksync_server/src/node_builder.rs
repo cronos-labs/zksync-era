@@ -309,10 +309,12 @@ impl MainNodeBuilder {
 
         let tx_sink_config = try_load_config!(self.configs.tx_sink_config);
         if deny_list_enabled && tx_sink_config.deny_list().is_some() {
+            tracing::info!("run DenyListPoolSinkLayer {:?}", tx_sink_config.deny_list());
             self.node.add_layer(DenyListPoolSinkLayer::new(
                 tx_sink_config.deny_list().unwrap(),
             ));
         } else {
+            tracing::info!("run MasterPoolSinkLayer");
             self.node.add_layer(MasterPoolSinkLayer);
         }
 
@@ -789,6 +791,7 @@ impl MainNodeBuilder {
                     self = self.add_external_proof_integration_api_layer()?;
                 }
                 Component::TxSinkDenyList => {
+                    tracing::info!("L2 denylist enabled.");
                     deny_list_enabled = true;
                 }
             }
