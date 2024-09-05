@@ -79,6 +79,7 @@ where
         latency.observe();
         Ok(tx)
     }
+
     async fn get_pending_block_base_fee_per_gas(&self) -> EnrichedClientResult<U256> {
         COUNTERS.call[&(Method::PendingBlockBaseFee, self.component())].inc();
         let latency = LATENCIES.direct[&Method::PendingBlockBaseFee].start();
