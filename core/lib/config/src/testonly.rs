@@ -415,6 +415,7 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             tx_aggregation_paused: false,
             tx_aggregation_only_prove_and_execute: false,
             signing_mode: SigningMode::PrivateKey,
+            max_acceptable_base_fee_in_wei: self.sample(rng),
         }
     }
 }

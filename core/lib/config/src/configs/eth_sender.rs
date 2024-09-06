@@ -43,6 +43,7 @@ impl EthConfig {
                 tx_aggregation_paused: false,
                 tx_aggregation_only_prove_and_execute: false,
                 signing_mode: SigningMode::PrivateKey,
+                max_acceptable_base_fee_in_wei: 100000000000,
             }),
             gas_adjuster: Some(GasAdjusterConfig {
                 default_priority_fee_per_gas: 1000000000,
@@ -138,6 +139,9 @@ pub struct SenderConfig {
 
     /// Type of signing client for Ethereum transactions.
     pub signing_mode: SigningMode,
+
+    /// Max acceptable base fee the sender is allowed to use to send L1 txs.
+    pub max_acceptable_base_fee_in_wei: u64,
 }
 
 impl SenderConfig {

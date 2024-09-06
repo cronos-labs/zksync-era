@@ -137,6 +137,8 @@ impl ProtoRepr for proto::Sender {
                 .and_then(|x| Ok(proto::SigningMode::try_from(*x)?))
                 .context("signing_mode")?
                 .parse(),
+            max_acceptable_base_fee_in_wei: *required(&self.max_acceptable_base_fee_in_wei)
+                .context("max_acceptable_base_fee_in_wei")?,
         })
     }
 
@@ -170,6 +172,7 @@ impl ProtoRepr for proto::Sender {
             tx_aggregation_only_prove_and_execute: Some(this.tx_aggregation_only_prove_and_execute),
             tx_aggregation_paused: Some(this.tx_aggregation_paused),
             signing_mode: Some(proto::SigningMode::new(&this.signing_mode).into()),
+            max_acceptable_base_fee_in_wei: Some(this.max_acceptable_base_fee_in_wei),
         }
     }
 }
