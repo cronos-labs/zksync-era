@@ -43,6 +43,7 @@ impl EthConfig {
                 tx_aggregation_paused: false,
                 tx_aggregation_only_prove_and_execute: false,
                 time_in_mempool_in_l1_blocks_cap: 1800,
+                signing_mode: SigningMode::PrivateKey,
             }),
             gas_adjuster: Some(GasAdjusterConfig {
                 default_priority_fee_per_gas: 1000000000,
@@ -78,6 +79,13 @@ pub enum ProofSendingMode {
 pub enum ProofLoadingMode {
     OldProofFromDb,
     FriProofFromGcs,
+}
+
+#[derive(Debug, Deserialize, Clone, Copy, PartialEq, Default)]
+pub enum SigningMode {
+    #[default]
+    PrivateKey,
+    GcloudKms,
 }
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
@@ -123,6 +131,8 @@ pub struct SenderConfig {
     /// Cap of time in mempool for price calculations
     #[serde(default = "SenderConfig::default_time_in_mempool_in_l1_blocks_cap")]
     pub time_in_mempool_in_l1_blocks_cap: u32,
+    /// Type of signing client for Ethereum transactions.
+    pub signing_mode: SigningMode,
 }
 
 impl SenderConfig {
