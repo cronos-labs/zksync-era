@@ -87,10 +87,29 @@ impl ContractVerifier {
             tracing::info!(
                 "Bytecode mismatch req {}, deployed: 0x{}, compiled 0x{}",
                 request.id,
-                hex::encode(deployed_bytecode),
-                hex::encode(artifacts.bytecode)
+                hex::encode(deployed_bytecode.clone()),
+                hex::encode(artifacts.bytecode.clone())
             );
-            return Err(ContractVerifierError::BytecodeMismatch);
+
+            // try without the last 64bytes which usually represents the compiler metadata
+            let mut deployed_bytecode_without_metadata: Vec<u8> = deployed_bytecode.clone();
+            // Check if the length of the vector is greater than or equal to 64
+            if deployed_bytecode_without_metadata.len() >= 64 {
+                // Remove the last 64 bytes
+                let new_len = deployed_bytecode_without_metadata.len() - 64;
+                deployed_bytecode_without_metadata.truncate(new_len);
+                if artifacts.bytecode.clone() != deployed_bytecode_without_metadata {
+                    tracing::info!(
+                        "Bytecode without metadata mismatch req {}, deployed: 0x{}, compiled 0x{}",
+                        request.id,
+                        hex::encode(deployed_bytecode_without_metadata.clone()),
+                        hex::encode(artifacts.bytecode.clone())
+                    );
+                    return Err(ContractVerifierError::BytecodeMismatch);
+                }
+            } else {
+                return Err(ContractVerifierError::BytecodeMismatch);
+            }
         }
 
         match constructor_args {
@@ -106,7 +125,7 @@ impl ContractVerifier {
 
         Ok(VerificationInfo {
             request,
-            artifacts,
+            artifacts: artifacts.clone(),
             verified_at: Utc::now(),
         })
     }
