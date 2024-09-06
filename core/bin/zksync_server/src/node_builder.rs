@@ -68,7 +68,7 @@ use zksync_node_framework::{
             server::{Web3ServerLayer, Web3ServerOptionalConfig},
             tree_api_client::TreeApiClientLayer,
             tx_sender::{PostgresStorageCachesConfig, TxSenderLayer},
-            tx_sink::MasterPoolSinkLayer,
+            tx_sink::{DenyListPoolSinkLayer, MasterPoolSinkLayer},
         },
     },
     service::{ZkStackService, ZkStackServiceBuilder},
@@ -319,7 +319,7 @@ impl MainNodeBuilder {
         Ok(self)
     }
 
-    fn add_tx_sender_layer(mut self) -> anyhow::Result<Self> {
+    fn add_tx_sender_layer(mut self, deny_list_enabled: bool) -> anyhow::Result<Self> {
         let sk_config = try_load_config!(self.configs.state_keeper_config);
         let rpc_config = try_load_config!(self.configs.api_config).web3_json_rpc;
         let postgres_storage_caches_config = PostgresStorageCachesConfig {
@@ -328,8 +328,17 @@ impl MainNodeBuilder {
             latest_values_cache_size: rpc_config.latest_values_cache_size() as u64,
         };
 
-        // On main node we always use master pool sink.
-        self.node.add_layer(MasterPoolSinkLayer);
+        let tx_sink_config = try_load_config!(self.configs.tx_sink_config);
+        if deny_list_enabled && tx_sink_config.deny_list().is_some() {
+            tracing::info!("run DenyListPoolSinkLayer {:?}", tx_sink_config.deny_list());
+            self.node.add_layer(DenyListPoolSinkLayer::new(
+                tx_sink_config.deny_list().unwrap(),
+            ));
+        } else {
+            tracing::info!("run MasterPoolSinkLayer");
+            self.node.add_layer(MasterPoolSinkLayer);
+        }
+
         self.node.add_layer(TxSenderLayer::new(
             TxSenderConfig::new(
                 &sk_config,
@@ -708,6 +717,8 @@ impl MainNodeBuilder {
             _ => 0,
         });
 
+        let mut deny_list_enabled = false;
+
         // Add "component-specific" layers.
         // Note that the layers are added only once, so it's fine to add the same layer multiple times.
         for component in &components {
@@ -724,7 +735,7 @@ impl MainNodeBuilder {
                 Component::HttpApi => {
                     self = self
                         .add_l1_gas_layer()?
-                        .add_tx_sender_layer()?
+                        .add_tx_sender_layer(deny_list_enabled)?
                         .add_tree_api_client_layer()?
                         .add_api_caches_layer()?
                         .add_http_web3_api_layer()?;
@@ -732,7 +743,7 @@ impl MainNodeBuilder {
                 Component::WsApi => {
                     self = self
                         .add_l1_gas_layer()?
-                        .add_tx_sender_layer()?
+                        .add_tx_sender_layer(deny_list_enabled)?
                         .add_tree_api_client_layer()?
                         .add_api_caches_layer()?
                         .add_ws_web3_api_layer()?;
@@ -799,6 +810,10 @@ impl MainNodeBuilder {
                 }
                 Component::ExternalProofIntegrationApi => {
                     self = self.add_external_proof_integration_api_layer()?;
+                }
+                Component::TxSinkDenyList => {
+                    tracing::info!("L2 denylist enabled.");
+                    deny_list_enabled = true;
                 }
             }
         }

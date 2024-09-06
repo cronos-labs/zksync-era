@@ -1,10 +1,11 @@
 //! Helper module to submit transactions into the ZKsync Network.
 
-use std::{sync::Arc, time::Instant};
+use std::{collections::HashSet, sync::Arc, time::Instant};
 
 use anyhow::Context as _;
+use deny_list_pool_sink::DenyListPoolSink;
 use tokio::sync::RwLock;
-use zksync_config::configs::{api::Web3JsonRpcConfig, chain::StateKeeperConfig};
+use zksync_config::configs::{api::Web3JsonRpcConfig, chain::StateKeeperConfig, TxSinkConfig};
 use zksync_contracts::BaseSystemContracts;
 use zksync_dal::{
     transactions_dal::L2TxSubmissionResult, Connection, ConnectionPool, Core, CoreDal,
@@ -47,6 +48,7 @@ use crate::{
     tx_sender::result::ApiCallResult,
 };
 
+pub mod deny_list_pool_sink;
 pub mod master_pool_sink;
 pub mod proxy;
 mod result;
@@ -54,25 +56,45 @@ mod result;
 pub(crate) mod tests;
 pub mod tx_sink;
 
+pub struct TxSenderBuilderConfigs {
+    pub tx_sender_config: TxSenderConfig,
+    pub web3_json_config: Web3JsonRpcConfig,
+    pub state_keeper_config: StateKeeperConfig,
+    pub tx_sink_config: Option<TxSinkConfig>,
+}
+
 pub async fn build_tx_sender(
-    tx_sender_config: &TxSenderConfig,
-    web3_json_config: &Web3JsonRpcConfig,
-    state_keeper_config: &StateKeeperConfig,
+    builder_config: TxSenderBuilderConfigs,
     replica_pool: ConnectionPool<Core>,
     master_pool: ConnectionPool<Core>,
     batch_fee_model_input_provider: Arc<dyn BatchFeeModelInputProvider>,
     storage_caches: PostgresStorageCaches,
 ) -> anyhow::Result<(TxSender, VmConcurrencyBarrier)> {
-    let sequencer_sealer = SequencerSealer::new(state_keeper_config.clone());
-    let master_pool_sink = MasterPoolSink::new(master_pool);
-    let tx_sender_builder = TxSenderBuilder::new(
-        tx_sender_config.clone(),
-        replica_pool.clone(),
-        Arc::new(master_pool_sink),
-    )
-    .with_sealer(Arc::new(sequencer_sealer));
+    let sequencer_sealer = SequencerSealer::new(builder_config.state_keeper_config);
 
-    let max_concurrency = web3_json_config.vm_concurrency_limit();
+    let tx_sender_builder = if let Some(config) = builder_config.tx_sink_config {
+        let deny_list_pool_sink = if let Some(list) = config.deny_list() {
+            DenyListPoolSink::new(MasterPoolSink::new(master_pool), list)
+        } else {
+            DenyListPoolSink::new(MasterPoolSink::new(master_pool), HashSet::<Address>::new())
+        };
+
+        TxSenderBuilder::new(
+            builder_config.tx_sender_config.clone(),
+            replica_pool.clone(),
+            Arc::new(deny_list_pool_sink),
+        )
+        .with_sealer(Arc::new(sequencer_sealer))
+    } else {
+        TxSenderBuilder::new(
+            builder_config.tx_sender_config.clone(),
+            replica_pool.clone(),
+            Arc::new(MasterPoolSink::new(master_pool)),
+        )
+        .with_sealer(Arc::new(sequencer_sealer))
+    };
+
+    let max_concurrency = builder_config.web3_json_config.vm_concurrency_limit();
     let (vm_concurrency_limiter, vm_barrier) = VmConcurrencyLimiter::new(max_concurrency);
 
     let batch_fee_input_provider =
