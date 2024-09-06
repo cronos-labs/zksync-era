@@ -27,6 +27,11 @@ enum PubdataSendingMode {
   RELAYED_L2_CALLDATA = 3;
 }
 
+enum SigningMode {
+  PRIVATE_KEY = 0;
+  GCLOUD_KMS = 1;
+}
+
 message Sender {
   repeated uint64 aggregated_proof_sizes = 1; // ?
   optional uint64 wait_confirmations = 2; // optional
@@ -48,6 +53,7 @@ message Sender {
   reserved 19; reserved "proof_loading_mode";
   optional bool tx_aggregation_paused = 20; // required
   optional bool tx_aggregation_only_prove_and_execute = 21; // required
+  optional SigningMode signing_mode = 99; // required
 }
 
 message GasAdjuster {

@@ -41,7 +41,7 @@ impl FromEnv for GasAdjusterConfig {
 
 #[cfg(test)]
 mod tests {
-    use zksync_config::configs::eth_sender::{ProofSendingMode, PubdataSendingMode};
+    use zksync_config::configs::eth_sender::{ProofSendingMode, PubdataSendingMode, SigningMode};
 
     use super::*;
     use crate::test_utils::{hash, EnvMutex};
@@ -58,7 +58,6 @@ mod tests {
                     aggregated_block_execute_deadline: 4_000,
                     max_aggregated_tx_gas: 4_000_000,
                     max_eth_tx_data_size: 120_000,
-
                     timestamp_criteria_max_allowed_lag: 30,
                     max_aggregated_blocks_to_commit: 3,
                     max_aggregated_blocks_to_execute: 4,
@@ -72,6 +71,7 @@ mod tests {
                     pubdata_sending_mode: PubdataSendingMode::Calldata,
                     tx_aggregation_only_prove_and_execute: false,
                     tx_aggregation_paused: false,
+                    signing_mode: SigningMode::PrivateKey,
                 }),
                 gas_adjuster: Some(GasAdjusterConfig {
                     default_priority_fee_per_gas: 20000000000,
@@ -136,6 +136,7 @@ mod tests {
             ETH_SENDER_SENDER_PUBDATA_SENDING_MODE="Calldata"
             ETH_WATCH_CONFIRMATIONS_FOR_ETH_EVENT="0"
             ETH_WATCH_ETH_NODE_POLL_INTERVAL="300"
+            ETH_SENDER_SENDER_SIGNING_MODE="PrivateKey"
             ETH_CLIENT_WEB3_URL="http://127.0.0.1:8545"
 
         "#;

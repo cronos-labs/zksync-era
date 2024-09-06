@@ -3,6 +3,7 @@ use zksync_types::{Address, EIP712TypedStructure, Eip712Domain, PackedEthSignatu
 
 pub use crate::{pk_signer::PrivateKeySigner, raw_ethereum_tx::TransactionParameters};
 
+pub mod g_kms_signer;
 mod pk_signer;
 mod raw_ethereum_tx;
 
