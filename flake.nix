@@ -4,7 +4,7 @@
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
   inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v24.9.0";
-  inputs.zksync-era-testnet.url = "github:cronos-labs/cronos-zkevm/cronos-v24.23.0";
+  inputs.zksync-era-testnet.url = "github:matter-labs/zksync-era/core-v24.23.0";
 
   inputs.zksync-era-mainnet.flake = false;
   inputs.zksync-era-testnet.flake = false;

@@ -112,17 +112,17 @@
     "zksync-era-testnet": {
       "flake": false,
       "locked": {
-        "lastModified": 1725612388,
-        "narHash": "sha256-XUOVAwNaqbB2E8wgw6O6lNExEcQk6Vs4RNulA071YkE=",
-        "owner": "cronos-labs",
-        "repo": "cronos-zkevm",
-        "rev": "0f8eac22ac7758cb96fe4f18cf724c673fb9a289",
+        "lastModified": 1724866852,
+        "narHash": "sha256-O87sIynC7jznQRn9j8CVKs1wGwAfSJ1b+s3bMDwEpwY=",
+        "owner": "matter-labs",
+        "repo": "zksync-era",
+        "rev": "306038107369a1e8c3535945c187874943f9750a",
         "type": "github"
       },
       "original": {
-        "owner": "cronos-labs",
-        "ref": "cronos-v24.23.0",
-        "repo": "cronos-zkevm",
+        "owner": "matter-labs",
+        "ref": "core-v24.23.0",
+        "repo": "zksync-era",
         "type": "github"
       }
     }
