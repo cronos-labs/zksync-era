@@ -23,9 +23,13 @@
       };
     in
       with pkgs; let
-        rustPlatform' = makeRustPlatform {
-          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era + /rust-toolchain);
-          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era + /rust-toolchain);
+        rustPlatform-mainnet = makeRustPlatform {
+          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era-mainnet + /rust-toolchain);
+          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-mainnet + /rust-toolchain);
+        };
+        rustPlatform-testnet = makeRustPlatform {
+          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
+          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
         };
         dockerTools' = dockerTools.override {
           skopeo = pkgs.writeScriptBin "skopeo" ''exec ${skopeo}/bin/skopeo "$@" --authfile=/etc/docker/config.json'';
@@ -42,7 +46,7 @@
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
           sha256 = "";
         };
-        external-node-mainnet = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
+        external-node-mainnet = rustPlatform-mainnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
           cargoHash = "sha256-VercmY4EjkkTbcvHV/aH1SRNm84XzAjzgLalT2ESYJo=";
@@ -52,7 +56,7 @@
           src = inputs.zksync-era-mainnet + /.;
           version = "dummy";
         };
-        external-node-testnet = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
+        external-node-testnet = rustPlatform-testnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
           cargoHash = "";
