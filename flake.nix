@@ -59,7 +59,12 @@
         external-node-testnet = rustPlatform-testnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
-          cargoHash = "";
+          cargoLock = {
+            lockFile = inputs.zksync-era-testnet + /Cargo.lock;
+            outputHashes = {
+              "vm2-0.1.0" = "sha256-FBCleLufoEHMvkCJ3rMudlWKwf7wAcGStSLeWZmcmgc=";
+            };
+          };
           doCheck = false;
           nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
           pname = "external-node";
