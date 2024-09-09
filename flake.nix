@@ -3,9 +3,11 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
-  inputs.zksync-era.url = "github:matter-labs/zksync-era/core-v24.9.0";
+  inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v24.9.0";
+  inputs.zksync-era-testnet.url = "github:cronos-labs/cronos-zkevm/cronos-v24.23.0";
 
-  inputs.zksync-era.flake = false;
+  inputs.zksync-era-mainnet.flake = false;
+  inputs.zksync-era-testnet.flake = false;
 
   outputs = {
     flake-utils,
@@ -35,32 +37,42 @@
           sha256 = "sha256-GQGaojsWBf0QNRSAj6vQAS+KElIXIRIBQxaxLEszpEs=";
         };
         base-image-testnet = dockerTools'.pullImage {
-          finalImageTag = "testnet-v24.9.0";
-          imageDigest = "sha256:28a7022cda8e5aa6abffd296213b9d01261846a9557d66f86dcdf6720600dbec";
+          finalImageTag = "testnet-v24.23.0";
+          imageDigest = "sha256:53ce8dd43a5721ca69b82db43aa2e87b2b7416c25c9fe63161e4435b25f6078f";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "sha256-HEvngk2tYM/0jMEA1it5qRiuFBRSt9zYTOJ0VHApFQ4=";
+          sha256 = "";
         };
-        external-node = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
+        external-node-mainnet = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
           cargoHash = "sha256-VercmY4EjkkTbcvHV/aH1SRNm84XzAjzgLalT2ESYJo=";
           doCheck = false;
           nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
           pname = "external-node";
-          src = inputs.zksync-era + /.;
+          src = inputs.zksync-era-mainnet + /.;
           version = "dummy";
         };
-        start = writeTextFile {
-          destination = "/bin/start.sh";
-          executable = true;
-          name = "start.sh";
-          text = ''
-            #!${bash}/bin/bash
-            ${sqlx-cli}/bin/sqlx database setup
-            exec ${external-node}/bin/zksync_external_node "$@"
-          '';
+        external-node-testnet = rustPlatform'.buildRustPackage.override {stdenv = clangStdenv;} {
+          buildInputs = [openssl];
+          cargoBuildFlags = "--bin zksync_external_node";
+          cargoHash = "";
+          doCheck = false;
+          nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
+          pname = "external-node";
+          src = inputs.zksync-era-testnet + /.;
+          version = "dummy";
         };
-        config.Entrypoint = ["${start}/bin/start.sh"];
+        start = bin:
+          writeTextFile {
+            destination = "/bin/start.sh";
+            executable = true;
+            name = "start.sh";
+            text = ''
+              #!${bash}/bin/bash
+              ${sqlx-cli}/bin/sqlx database setup
+              exec ${bin}/bin/zksync_external_node "$@"
+            '';
+          };
         copyToRoot = buildEnv {
           name = "image-root";
           paths = [
@@ -74,13 +86,15 @@
           name = "mainnet";
           tag = "nix";
           fromImage = base-image-mainnet;
-          inherit config copyToRoot;
+          inherit copyToRoot;
+          config.Entrypoint = ["${start external-node-mainnet}/bin/start.sh"];
         };
         packages.testnet = dockerTools.buildImage {
           name = "testnet";
           tag = "nix";
           fromImage = base-image-testnet;
-          inherit config copyToRoot;
+          inherit copyToRoot;
+          config.Entrypoint = ["${start external-node-testnet}/bin/start.sh"];
         };
       });
 }
