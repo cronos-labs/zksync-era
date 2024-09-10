@@ -14,7 +14,7 @@ env:
   TESTNET_VERSION: v24.23.0
 
 jobs:
-  nix-build-aarch64:
+  nix-build-aarch64-mainnet:
     runs-on: ubuntu-latest
 
     permissions:
@@ -38,13 +38,13 @@ jobs:
           nix run github:nix-community/nix-eval-jobs
           -- --gc-roots-dir gcroot
           --flake
-          ".#packages.aarch64-linux"
+          ".#packages.aarch64-linux.mainnet"
     - run: >
           nix run github:Mic92/nix-fast-build
           -- --skip-cached --no-nom
           --systems aarch64-linux
           --flake
-          ".#packages.aarch64-linux"
+          ".#packages.aarch64-linux.mainnet"
     - run: |
         nix build .#packages.aarch64-linux.mainnet
         docker load < result
@@ -54,6 +54,38 @@ jobs:
         docker manifest create --amend ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION-amd64
         docker manifest push ghcr.io/cronos-labs/external-node:mainnet-$MAINNET_VERSION
 
+  nix-build-aarch64-testnet:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: docker/setup-qemu-action@v3
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: nixbuild/nix-quick-install-action@master
+      with:
+        nix_conf: |
+          extra-platforms = aarch64-linux
+          extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
+    - uses: DeterminateSystems/magic-nix-cache-action@v2
+    - run: >
+          nix run github:nix-community/nix-eval-jobs
+          -- --gc-roots-dir gcroot
+          --flake
+          ".#packages.aarch64-linux.testnet"
+    - run: >
+          nix run github:Mic92/nix-fast-build
+          -- --skip-cached --no-nom
+          --systems aarch64-linux
+          --flake
+          ".#packages.aarch64-linux.testnet"
+    - run: |
         nix build .#packages.aarch64-linux.testnet
         docker load < result
         docker tag testnet:nix ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-aarch64
@@ -61,6 +93,7 @@ jobs:
         docker manifest create --amend ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-aarch64
         docker manifest create --amend ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-amd64
         docker manifest push ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION
+
 
   nix-build-amd64:
     runs-on: ubuntu-latest
