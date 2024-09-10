@@ -94,7 +94,6 @@ jobs:
         docker manifest create --amend ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION-amd64
         docker manifest push ghcr.io/cronos-labs/external-node:testnet-$TESTNET_VERSION
 
-
   nix-build-amd64:
     runs-on: ubuntu-latest
 
