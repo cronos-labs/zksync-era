@@ -42,9 +42,9 @@
         };
         base-image-testnet = dockerTools'.pullImage {
           finalImageTag = "testnet-v24.23.0";
-          imageDigest = "sha256:53ce8dd43a5721ca69b82db43aa2e87b2b7416c25c9fe63161e4435b25f6078f";
+          imageDigest = "sha256:e7495ec76b812b1fc2aa81e0bca3e6b286debf5a0981ab24ef9209c4180d2e7b";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "sha256-3AK7bjUHUgbzmUkG6jeIU6O3PPgz9AK+XY8aY+7gsSw=";
+          sha256 = "";
         };
         external-node-mainnet = rustPlatform-mainnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
