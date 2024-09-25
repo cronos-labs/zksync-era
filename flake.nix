@@ -96,7 +96,7 @@
           tag = "nix";
           fromImage = base-image-mainnet;
           inherit copyToRoot;
-          config.Entrypoint = ["${start external-node-mainnet}/bin/start.sh"];
+          # config.Entrypoint = ["${start external-node-mainnet}/bin/start.sh"];
         };
         packages.testnet = dockerTools.buildImage {
           name = "testnet";
