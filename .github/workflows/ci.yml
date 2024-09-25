@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  MAINNET_VERSION: v24.9.0
+  MAINNET_VERSION: v24.23.0
   TESTNET_VERSION: v24.23.0
 
 jobs:
