@@ -3,7 +3,7 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
-  inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v24.9.0";
+  inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v24.23.0";
   inputs.zksync-era-testnet.url = "github:matter-labs/zksync-era/core-v24.23.0";
 
   inputs.zksync-era-mainnet.flake = false;
@@ -35,10 +35,10 @@
           skopeo = pkgs.writeScriptBin "skopeo" ''exec ${skopeo}/bin/skopeo "$@" --authfile=/etc/docker/config.json'';
         };
         base-image-mainnet = dockerTools'.pullImage {
-          finalImageTag = "mainnet-v24.9.0";
-          imageDigest = "sha256:aeaa2825da75b00fbd63e5f7f9dbd825098b1b068ed7397a479e9860b077af42";
+          finalImageTag = "mainnet-v24.23.0";
+          imageDigest = "sha256:adde524ccb4803843ab8243c85224d05a86b7ba31503d5b895cc7a362fe4f875";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "sha256-GQGaojsWBf0QNRSAj6vQAS+KElIXIRIBQxaxLEszpEs=";
+          sha256 = "";
         };
         base-image-testnet = dockerTools'.pullImage {
           finalImageTag = "testnet-v24.23.0";
