@@ -512,7 +512,8 @@ impl MainNodeBuilder {
 
         match da_client_config.client {
             DAClient::Avail(config) => {
-                self.node.add_layer(AvailWiringLayer::new(config));
+                self.node
+                    .add_layer(AvailWiringLayer::new_with_google_cloud(config));
             }
             DAClient::ObjectStore(config) => {
                 self.node

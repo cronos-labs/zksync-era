@@ -2794,6 +2794,72 @@ dependencies = [
 ]
 
 [[package]]
+name = "google-cloud-auth"
+version = "0.17.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "357160f51a60ec3e32169ad687f4abe0ee1e90c73b449aa5d11256c4f1cf2ff6"
+dependencies = [
+ "async-trait",
+ "base64 0.21.5",
+ "google-cloud-metadata",
+ "google-cloud-token",
+ "home",
+ "jsonwebtoken",
+ "reqwest 0.12.5",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "time",
+ "tokio",
+ "tracing",
+ "urlencoding",
+]
+
+[[package]]
+name = "google-cloud-gax"
+version = "0.19.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c929076122a1839455cfe6c030278f10a400dd4dacc11d2ca46c20c47dc05996"
+dependencies = [
+ "google-cloud-token",
+ "http 1.1.0",
+ "thiserror",
+ "tokio",
+ "tokio-retry2",
+ "tonic",
+ "tower",
+ "tracing",
+]
+
+[[package]]
+name = "google-cloud-googleapis"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0ae8ab26ef7c7c3f7dfb9cc3982293d031d8e78c85d00ddfb704b5c35aeff7c8"
+dependencies = [
+ "prost 0.13.1",
+ "prost-types 0.13.1",
+ "tonic",
+]
+
+[[package]]
+name = "google-cloud-kms"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3ed3ae94026ce6ee13f22ad0005cf19ea0de543b78b06583f267e23cb7839d1b"
+dependencies = [
+ "google-cloud-auth 0.17.1",
+ "google-cloud-gax",
+ "google-cloud-googleapis",
+ "google-cloud-token",
+ "prost-types 0.13.1",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tracing",
+]
+
+[[package]]
 name = "google-cloud-metadata"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2816,7 +2882,40 @@ dependencies = [
  "base64 0.21.5",
  "bytes",
  "futures-util",
- "google-cloud-auth",
+ "google-cloud-auth 0.16.0",
+ "google-cloud-metadata",
+ "google-cloud-token",
+ "hex",
+ "once_cell",
+ "percent-encoding",
+ "pkcs8 0.10.2",
+ "regex",
+ "reqwest 0.12.5",
+ "reqwest-middleware",
+ "ring",
+ "serde",
+ "serde_json",
+ "sha2 0.10.8",
+ "thiserror",
+ "time",
+ "tokio",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "google-cloud-storage"
+version = "0.22.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7347a3d65cd64db51e5b4aebf0c68c484042948c6d53f856f58269bc9816360"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "base64 0.21.5",
+ "bytes",
+ "futures-util",
+ "google-cloud-auth 0.17.1",
  "google-cloud-metadata",
  "google-cloud-token",
  "hex",
@@ -4886,18 +4985,18 @@ dependencies = [
 
 [[package]]
 name = "pin-project"
-version = "1.1.3"
+version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fda4ed1c6c173e3fc7a83629421152e01d7b1f9b7f65fb301e490e8cfc656422"
+checksum = "b6bf43b791c5b9e34c3d182969b4abb522f9343702850a2e57f460d00d09b4b3"
 dependencies = [
  "pin-project-internal",
 ]
 
 [[package]]
 name = "pin-project-internal"
-version = "1.1.3"
+version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4359fd9c9171ec6e8c62926d6faaf553a8dc3f64e1507e76da7911b4f6a04405"
+checksum = "2f38a4412a78282e09a2cf38d195ea5420d15ba0602cb375210efbc877243965"
 dependencies = [
  "proc-macro2 1.0.86",
  "quote 1.0.36",
@@ -5219,7 +5318,7 @@ dependencies = [
  "petgraph",
  "prettyplease",
  "prost 0.12.1",
- "prost-types",
+ "prost-types 0.12.1",
  "regex",
  "syn 2.0.72",
  "tempfile",
@@ -5263,7 +5362,7 @@ dependencies = [
  "miette",
  "once_cell",
  "prost 0.12.1",
- "prost-types",
+ "prost-types 0.12.1",
  "serde",
  "serde-value",
 ]
@@ -5278,6 +5377,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "prost-types"
+version = "0.13.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cee5168b05f49d4b0ca581206eb14a7b22fafd963efe729ac48eb03266e25cc2"
+dependencies = [
+ "prost 0.13.1",
+]
+
+[[package]]
 name = "protox"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5287,7 +5395,7 @@ dependencies = [
  "miette",
  "prost 0.12.1",
  "prost-reflect",
- "prost-types",
+ "prost-types 0.12.1",
  "protox-parse",
  "thiserror",
 ]
@@ -5300,7 +5408,7 @@ checksum = "7b4581f441c58863525a3e6bec7b8de98188cf75239a56c725a3e7288450a33f"
 dependencies = [
  "logos",
  "miette",
- "prost-types",
+ "prost-types 0.12.1",
  "thiserror",
 ]
 
@@ -7737,9 +7845,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.39.1"
+version = "1.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d040ac2b29ab03b09d4129c2f5bbd012a3ac2f79d38ff506a4bf8dd34b0eac8a"
+checksum = "e2b070231665d27ad9ec9b8df639893f46727666c6767db40317fbe920a5d998"
 dependencies = [
  "backtrace",
  "bytes",
@@ -7771,6 +7879,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbae76ab933c85776efabc971569dd6119c580d8f5d448769dec1764bf796ef2"
 dependencies = [
  "native-tls",
+ "tokio",
+]
+
+[[package]]
+name = "tokio-retry2"
+version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1af686b421a51318f526be5148eb81138fd1e1dcfc9ddce3b2e449b84eae98a9"
+dependencies = [
+ "pin-project",
  "tokio",
 ]
 
@@ -7882,6 +8000,7 @@ dependencies = [
  "axum",
  "base64 0.22.1",
  "bytes",
+ "flate2",
  "h2 0.4.5",
  "http 1.1.0",
  "http-body 1.0.0",
@@ -7892,13 +8011,16 @@ dependencies = [
  "percent-encoding",
  "pin-project",
  "prost 0.13.1",
+ "rustls-pemfile 2.0.0",
  "socket2",
  "tokio",
+ "tokio-rustls 0.26.0",
  "tokio-stream",
  "tower",
  "tower-layer",
  "tower-service",
  "tracing",
+ "webpki-roots",
 ]
 
 [[package]]
@@ -10313,6 +10435,9 @@ dependencies = [
  "async-trait",
  "ctrlc",
  "futures 0.3.30",
+ "google-cloud-kms",
+ "google-cloud-storage 0.22.1",
+ "hex",
  "pin-project-lite",
  "semver",
  "thiserror",
@@ -10474,8 +10599,8 @@ dependencies = [
  "async-trait",
  "bincode",
  "flate2",
- "google-cloud-auth",
- "google-cloud-storage",
+ "google-cloud-auth 0.16.0",
+ "google-cloud-storage 0.20.0",
  "http 1.1.0",
  "prost 0.12.1",
  "rand 0.8.5",
