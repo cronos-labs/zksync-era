@@ -49,7 +49,12 @@
         external-node-mainnet = rustPlatform-mainnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
-          cargoHash = "sha256-VercmY4EjkkTbcvHV/aH1SRNm84XzAjzgLalT2ESYJo=";
+          cargoLock = {
+            lockFile = inputs.zksync-era-mainnet + /Cargo.lock;
+            outputHashes = {
+              "vm2-0.1.0" = "sha256-FBCleLufoEHMvkCJ3rMudlWKwf7wAcGStSLeWZmcmgc=";
+            };
+          };
           doCheck = false;
           nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
           pname = "external-node";
