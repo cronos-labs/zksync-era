@@ -1,6 +1,6 @@
 use thiserror::Error;
 use zksync_multivm::interface::{ExecutionResult, VmExecutionResultAndLogs};
-use zksync_types::{l2::error::TxCheckError, U256};
+use zksync_types::{l2::error::TxCheckError, Address, U256};
 use zksync_web3_decl::error::EnrichedClientError;
 
 use crate::execution_sandbox::{SandboxExecutionError, ValidationError};
@@ -67,6 +67,8 @@ pub enum SubmitTxError {
     /// Catch-all internal error (e.g., database error) that should not be exposed to the caller.
     #[error("internal error")]
     Internal(#[from] anyhow::Error),
+    #[error("sender address {0} is in deny list")]
+    SenderInDenyList(Address),
 }
 
 impl SubmitTxError {
@@ -96,6 +98,7 @@ impl SubmitTxError {
             Self::MintedAmountOverflow => "minted-amount-overflow",
             Self::ProxyError(_) => "proxy-error",
             Self::Internal(_) => "internal",
+            Self::SenderInDenyList(_) => "sender-in-deny-list",
         }
     }
 

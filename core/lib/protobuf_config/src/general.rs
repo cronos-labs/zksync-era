@@ -46,6 +46,7 @@ impl ProtoRepr for proto::GeneralConfig {
             ),
             experimental_vm_config: read_optional_repr(&self.experimental_vm),
             prover_job_monitor_config: read_optional_repr(&self.prover_job_monitor),
+            tx_sink_config: read_optional_repr(&self.tx_sink),
         })
     }
 
@@ -106,6 +107,7 @@ impl ProtoRepr for proto::GeneralConfig {
                 .prover_job_monitor_config
                 .as_ref()
                 .map(ProtoRepr::build),
+            tx_sink: this.tx_sink_config.as_ref().map(ProtoRepr::build),
         }
     }
 }
