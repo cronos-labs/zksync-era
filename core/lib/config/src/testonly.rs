@@ -17,7 +17,7 @@ use zksync_crypto_primitives::K256PrivateKey;
 
 use crate::{
     configs::{
-        self, da_client::DAClientConfig::Avail, external_price_api_client::ForcedPriceClientConfig,
+        self, da_client::DAClientConfig::Avail, external_price_api_client::ForcedPriceClientConfig, eth_sender::SigningMode,
     },
     AvailConfig,
 };
@@ -411,6 +411,7 @@ impl Distribution<configs::eth_sender::SenderConfig> for EncodeDist {
             tx_aggregation_paused: false,
             tx_aggregation_only_prove_and_execute: false,
             time_in_mempool_in_l1_blocks_cap: self.sample(rng),
+            signing_mode: SigningMode::PrivateKey,
         }
     }
 }
