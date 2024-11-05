@@ -29,6 +29,12 @@ impl AvailWiringLayer {
     }
 
     pub fn new_with_google_cloud(config: AvailConfig) -> Self {
+        // Makes sure that `rustls` crypto backend is set before we instantiate
+        // a `Web3` client. `jsonrpsee` doesn't explicitly set it, and when
+        // multiple crypto backends are enabled, `rustls` can't choose one and panics.
+        // See [this issue](https://github.com/rustls/rustls/issues/1877) for more detail.
+        let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+        
         let rt = tokio::runtime::Runtime::new().unwrap();
 
         // Download encryped seed for google cloud storage

@@ -10439,6 +10439,7 @@ dependencies = [
  "google-cloud-storage 0.22.1",
  "hex",
  "pin-project-lite",
+ "rustls 0.23.10",
  "semver",
  "thiserror",
  "tokio",
