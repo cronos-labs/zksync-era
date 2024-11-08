@@ -110,6 +110,7 @@ impl ProtoRepr for proto::DataAvailabilitySecrets {
                     )
                     .unwrap(),
                 ),
+                private_key: None,
             }),
         };
 
@@ -133,7 +134,7 @@ impl ProtoRepr for proto::DataAvailabilitySecrets {
                     None
                 };
 
-                Some(DaSecrets::Avail(AvailSecret { seed_phrase }))
+                Some(DaSecrets::Avail(AvailSecret { seed_phrase: seed_phrase }),)
             }
         };
 

@@ -3165,6 +3165,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "google-cloud-auth"
+version = "0.17.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "357160f51a60ec3e32169ad687f4abe0ee1e90c73b449aa5d11256c4f1cf2ff6"
+dependencies = [
+ "async-trait",
+ "base64 0.21.7",
+ "google-cloud-metadata 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "google-cloud-token 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "home",
+ "jsonwebtoken",
+ "reqwest 0.12.7",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "time",
+ "tokio",
+ "tracing",
+ "urlencoding",
+]
+
+[[package]]
 name = "google-cloud-gax"
 version = "0.18.0"
 source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
@@ -3180,13 +3202,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "google-cloud-gax"
+version = "0.19.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c929076122a1839455cfe6c030278f10a400dd4dacc11d2ca46c20c47dc05996"
+dependencies = [
+ "google-cloud-token 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "http 1.1.0",
+ "thiserror",
+ "tokio",
+ "tokio-retry2",
+ "tonic 0.12.3",
+ "tower 0.4.13",
+ "tracing",
+]
+
+[[package]]
 name = "google-cloud-googleapis"
 version = "0.14.0"
 source = "git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627#8f387a13309707c493d2e581961ee5b0f20631fc"
 dependencies = [
  "prost 0.12.6",
- "prost-types",
+ "prost-types 0.12.6",
  "tonic 0.11.0",
+]
+
+[[package]]
+name = "google-cloud-googleapis"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0ae8ab26ef7c7c3f7dfb9cc3982293d031d8e78c85d00ddfb704b5c35aeff7c8"
+dependencies = [
+ "prost 0.13.3",
+ "prost-types 0.13.3",
+ "tonic 0.12.3",
 ]
 
 [[package]]
@@ -3198,11 +3247,28 @@ dependencies = [
  "ethers-core",
  "ethers-signers",
  "google-cloud-auth 0.16.0 (git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627)",
- "google-cloud-gax",
- "google-cloud-googleapis",
+ "google-cloud-gax 0.18.0",
+ "google-cloud-googleapis 0.14.0",
  "google-cloud-token 0.1.2 (git+https://github.com/yoshidan/google-cloud-rust.git?tag=v20240627)",
  "k256 0.13.4",
- "prost-types",
+ "prost-types 0.12.6",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tracing",
+]
+
+[[package]]
+name = "google-cloud-kms"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3ed3ae94026ce6ee13f22ad0005cf19ea0de543b78b06583f267e23cb7839d1b"
+dependencies = [
+ "google-cloud-auth 0.17.1",
+ "google-cloud-gax 0.19.1",
+ "google-cloud-googleapis 0.15.0",
+ "google-cloud-token 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "prost-types 0.13.3",
  "serde",
  "serde_json",
  "thiserror",
@@ -3243,6 +3309,39 @@ dependencies = [
  "bytes",
  "futures-util",
  "google-cloud-auth 0.16.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "google-cloud-metadata 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "google-cloud-token 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hex",
+ "once_cell",
+ "percent-encoding",
+ "pkcs8 0.10.2",
+ "regex",
+ "reqwest 0.12.7",
+ "reqwest-middleware",
+ "ring",
+ "serde",
+ "serde_json",
+ "sha2 0.10.8",
+ "thiserror",
+ "time",
+ "tokio",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "google-cloud-storage"
+version = "0.22.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7347a3d65cd64db51e5b4aebf0c68c484042948c6d53f856f58269bc9816360"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "base64 0.21.7",
+ "bytes",
+ "futures-util",
+ "google-cloud-auth 0.17.1",
  "google-cloud-metadata 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "google-cloud-token 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "hex",
@@ -5856,7 +5955,7 @@ dependencies = [
  "petgraph",
  "prettyplease",
  "prost 0.12.6",
- "prost-types",
+ "prost-types 0.12.6",
  "regex",
  "syn 2.0.77",
  "tempfile",
@@ -5899,7 +5998,7 @@ dependencies = [
  "miette",
  "once_cell",
  "prost 0.12.6",
- "prost-types",
+ "prost-types 0.12.6",
  "serde",
  "serde-value",
 ]
@@ -5914,6 +6013,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "prost-types"
+version = "0.13.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4759aa0d3a6232fb8dbdb97b61de2c20047c68aca932c7ed76da9d788508d670"
+dependencies = [
+ "prost 0.13.3",
+]
+
+[[package]]
 name = "protox"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5923,7 +6031,7 @@ dependencies = [
  "miette",
  "prost 0.12.6",
  "prost-reflect",
- "prost-types",
+ "prost-types 0.12.6",
  "protox-parse",
  "thiserror",
 ]
@@ -5936,7 +6044,7 @@ checksum = "7b4581f441c58863525a3e6bec7b8de98188cf75239a56c725a3e7288450a33f"
 dependencies = [
  "logos",
  "miette",
- "prost-types",
+ "prost-types 0.12.6",
  "thiserror",
 ]
 
@@ -8572,6 +8680,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-retry2"
+version = "0.5.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "903934dba1c4c2f2e9cb460ef10b5695e0b0ecad3bf9ee7c8675e540c5e8b2d1"
+dependencies = [
+ "pin-project",
+ "tokio",
+]
+
+[[package]]
 name = "tokio-rustls"
 version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8717,6 +8835,7 @@ dependencies = [
  "axum 0.7.6",
  "base64 0.22.1",
  "bytes",
+ "flate2",
  "h2 0.4.6",
  "http 1.1.0",
  "http-body 1.0.1",
@@ -8727,13 +8846,16 @@ dependencies = [
  "percent-encoding",
  "pin-project",
  "prost 0.13.3",
+ "rustls-pemfile 2.1.3",
  "socket2",
  "tokio",
+ "tokio-rustls 0.26.0",
  "tokio-stream",
  "tower 0.4.13",
  "tower-layer",
  "tower-service",
  "tracing",
+ "webpki-roots",
 ]
 
 [[package]]
@@ -10599,7 +10721,12 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "envy",
+ "google-cloud-kms 0.5.1",
+ "google-cloud-storage 0.22.1",
+ "hex",
+ "rustls 0.23.13",
  "serde",
+ "tokio",
  "zksync_basic_types",
  "zksync_config",
  "zksync_system_constants",
@@ -10662,8 +10789,8 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "ethers-signers",
- "google-cloud-gax",
- "google-cloud-kms",
+ "google-cloud-gax 0.18.0",
+ "google-cloud-kms 0.3.0",
  "hex",
  "rlp",
  "thiserror",
@@ -11321,7 +11448,7 @@ dependencies = [
  "bincode",
  "flate2",
  "google-cloud-auth 0.16.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "google-cloud-storage",
+ "google-cloud-storage 0.20.0",
  "http 1.1.0",
  "prost 0.12.6",
  "rand 0.8.5",

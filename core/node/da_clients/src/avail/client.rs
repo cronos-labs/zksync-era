@@ -10,6 +10,7 @@ use zksync_da_client::{
 };
 
 use crate::avail::sdk::RawAvailClient;
+use hex::FromHex;
 
 /// An implementation of the `DataAvailabilityClient` trait that interacts with the Avail network.
 #[derive(Debug, Clone)]
@@ -20,10 +21,23 @@ pub struct AvailClient {
 
 impl AvailClient {
     pub async fn new(config: AvailConfig, secrets: AvailSecrets) -> anyhow::Result<Self> {
-        let seed_phrase = secrets
+        let sdk_client = if let Some(_pk) = &secrets.private_key {
+            let bytes = Vec::from_hex(_pk).map_err(|e| anyhow::anyhow!("hex string convert failed: {}", e.to_string()))?;
+            if bytes.len() != 32 {
+                return Err(anyhow::anyhow!("Hex string must represent exactly 32 bytes."));
+            }
+            let mut array = [0u8; 32];
+            array.copy_from_slice(&bytes);
+
+            RawAvailClient::new_with_gcs_seed(config.app_id, array).await?
+        } else {
+            let seed_phrase = secrets
             .seed_phrase
             .ok_or_else(|| anyhow::anyhow!("seed phrase"))?;
-        let sdk_client = RawAvailClient::new(config.app_id, seed_phrase.0.expose_secret()).await?;
+            RawAvailClient::new(config.app_id, seed_phrase.0.expose_secret()).await?
+        };
+
+        tracing::info!("Created AvailClient!!!");
 
         Ok(Self {
             config,
