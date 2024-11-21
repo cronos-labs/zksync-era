@@ -108,7 +108,7 @@
           tag = "nix";
           fromImage = base-image-testnet;
           inherit copyToRoot;
-          config.Entrypoint = ["${start external-node-testnet}/bin/start.sh"];
+          # config.Entrypoint = ["${start external-node-testnet}/bin/start.sh"];
         };
       });
 }
