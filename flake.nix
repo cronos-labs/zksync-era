@@ -44,7 +44,7 @@
           finalImageTag = "testnet-v25.0.0";
           imageDigest = "sha256:c7dce7784c80b71219ecfec915faab46f46110d27be6cbe906e4745253e1cd0f";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "";
+          sha256 = "sha256-8CShbfqjt9QKuhLXeynDEfYlEluLQo7M+W15Vpq5yz8=";
         };
         external-node-mainnet = rustPlatform-mainnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
@@ -108,7 +108,7 @@
           tag = "nix";
           fromImage = base-image-testnet;
           inherit copyToRoot;
-          # config.Entrypoint = ["${start external-node-testnet}/bin/start.sh"];
+          config.Entrypoint = ["${start external-node-testnet}/bin/start.sh"];
         };
       });
 }
