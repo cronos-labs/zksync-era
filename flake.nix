@@ -4,10 +4,10 @@
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
   inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v24.23.0";
-  inputs.zksync-era-testnet.url = "github:matter-labs/zksync-era/core-v24.23.0";
+  inputs.cronos-zkevm-testnet.url = "github:cronos-labs/cronos-zkevm/core-v25.0.0";
 
   inputs.zksync-era-mainnet.flake = false;
-  inputs.zksync-era-testnet.flake = false;
+  inputs.cronos-zkevm-testnet.flake = false;
 
   outputs = {
     flake-utils,
@@ -28,8 +28,8 @@
           rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-mainnet + /rust-toolchain);
         };
         rustPlatform-testnet = makeRustPlatform {
-          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
-          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
+          cargo = rust-bin.fromRustupToolchainFile (inputs.cronos-zkevm-testnet + /rust-toolchain);
+          rustc = rust-bin.fromRustupToolchainFile (inputs.cronos-zkevm-testnet + /rust-toolchain);
         };
         dockerTools' = dockerTools.override {
           skopeo = pkgs.writeScriptBin "skopeo" ''exec ${skopeo}/bin/skopeo "$@" --authfile=/etc/docker/config.json'';
@@ -41,10 +41,10 @@
           sha256 = "sha256-BdwoSJbcxefz/IYv/nhskBk/oiwQyFooHSEs9dv5VxA=";
         };
         base-image-testnet = dockerTools'.pullImage {
-          finalImageTag = "testnet-v24.23.0";
-          imageDigest = "sha256:e7495ec76b812b1fc2aa81e0bca3e6b286debf5a0981ab24ef9209c4180d2e7b";
+          finalImageTag = "testnet-v25.0.0";
+          imageDigest = "sha256:c7dce7784c80b71219ecfec915faab46f46110d27be6cbe906e4745253e1cd0f";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "sha256-jOpofixUYcp0irE4LaLYx56tiDiAtr1ZB12EiWbPG2I=";
+          sha256 = "";
         };
         external-node-mainnet = rustPlatform-mainnet.buildRustPackage.override {stdenv = clangStdenv;} {
           buildInputs = [openssl];
@@ -65,7 +65,7 @@
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
           cargoLock = {
-            lockFile = inputs.zksync-era-testnet + /Cargo.lock;
+            lockFile = inputs.cronos-zkevm-testnet + /Cargo.lock;
             outputHashes = {
               "vm2-0.1.0" = "sha256-FBCleLufoEHMvkCJ3rMudlWKwf7wAcGStSLeWZmcmgc=";
             };
@@ -73,7 +73,7 @@
           doCheck = false;
           nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
           pname = "external-node";
-          src = inputs.zksync-era-testnet + /.;
+          src = inputs.cronos-zkevm-testnet + /.;
           version = "dummy";
         };
         start = bin:
