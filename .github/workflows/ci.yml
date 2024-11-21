@@ -11,7 +11,7 @@ concurrency:
 
 env:
   MAINNET_VERSION: v24.23.0
-  TESTNET_VERSION: v24.23.0
+  TESTNET_VERSION: v25.0.0
 
 jobs:
   nix-build-aarch64-mainnet:
