@@ -67,7 +67,8 @@
           cargoLock = {
             lockFile = inputs.cronos-zkevm-testnet + /Cargo.lock;
             outputHashes = {
-              "vm2-0.1.0" = "sha256-FBCleLufoEHMvkCJ3rMudlWKwf7wAcGStSLeWZmcmgc=";
+              "google-cloud-auth-0.16.0" = "";
+              "zksync_vm2-0.2.1" = "";
             };
           };
           doCheck = false;
