@@ -4,10 +4,10 @@
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
   inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v24.23.0";
-  inputs.cronos-zkevm-testnet.url = "github:cronos-labs/cronos-zkevm/cronos-v25.0.0";
+  inputs.zksync-era-testnet.url = "github:matter-labs/zksync-era/core-v25.0.0";
 
   inputs.zksync-era-mainnet.flake = false;
-  inputs.cronos-zkevm-testnet.flake = false;
+  inputs.zksync-era-testnet.flake = false;
 
   outputs = {
     flake-utils,
@@ -28,8 +28,8 @@
           rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-mainnet + /rust-toolchain);
         };
         rustPlatform-testnet = makeRustPlatform {
-          cargo = rust-bin.fromRustupToolchainFile (inputs.cronos-zkevm-testnet + /rust-toolchain);
-          rustc = rust-bin.fromRustupToolchainFile (inputs.cronos-zkevm-testnet + /rust-toolchain);
+          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
+          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
         };
         dockerTools' = dockerTools.override {
           skopeo = pkgs.writeScriptBin "skopeo" ''exec ${skopeo}/bin/skopeo "$@" --authfile=/etc/docker/config.json'';
@@ -65,16 +65,15 @@
           buildInputs = [openssl];
           cargoBuildFlags = "--bin zksync_external_node";
           cargoLock = {
-            lockFile = inputs.cronos-zkevm-testnet + /Cargo.lock;
+            lockFile = inputs.zksync-era-testnet + /Cargo.lock;
             outputHashes = {
-              "google-cloud-auth-0.16.0" = "sha256-UuVyR/JRxVvUl83BSBi0aK+Pk0hHGyIwG7VD/nn5YUM=";
               "zksync_vm2-0.2.1" = "sha256-fH8w6MiL11BIW55Hs6kqxWJKDOkr7Skr7wXQCk+x48U=";
             };
           };
           doCheck = false;
           nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
           pname = "external-node";
-          src = inputs.cronos-zkevm-testnet + /.;
+          src = inputs.zksync-era-testnet + /.;
           version = "dummy";
         };
         start = bin:

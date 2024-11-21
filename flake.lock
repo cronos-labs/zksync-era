@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "cronos-zkevm-testnet": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1730112896,
-        "narHash": "sha256-iwiLCNk2dMl5jGq3MVjQLfKGXvJxv7DUnh9dY6ygTU4=",
-        "owner": "cronos-labs",
-        "repo": "cronos-zkevm",
-        "rev": "63535ef4aa5562721134a38ef65c9c277961a57b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cronos-labs",
-        "ref": "cronos-v25.0.0",
-        "repo": "cronos-zkevm",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -69,11 +52,11 @@
     },
     "root": {
       "inputs": {
-        "cronos-zkevm-testnet": "cronos-zkevm-testnet",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay",
-        "zksync-era-mainnet": "zksync-era-mainnet"
+        "zksync-era-mainnet": "zksync-era-mainnet",
+        "zksync-era-testnet": "zksync-era-testnet"
       }
     },
     "rust-overlay": {
@@ -122,6 +105,23 @@
       "original": {
         "owner": "matter-labs",
         "ref": "core-v24.23.0",
+        "repo": "zksync-era",
+        "type": "github"
+      }
+    },
+    "zksync-era-testnet": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1729686199,
+        "narHash": "sha256-Cxg9aa9cx7SWMlw85t+MDEkBZb6sZEdb3RdNlBirD3U=",
+        "owner": "matter-labs",
+        "repo": "zksync-era",
+        "rev": "0d78228c8c6a848644ded1e6807ee88f80212c9f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "matter-labs",
+        "ref": "core-v25.0.0",
         "repo": "zksync-era",
         "type": "github"
       }
