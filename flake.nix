@@ -38,7 +38,7 @@
           finalImageTag = "mainnet-v25.0.0";
           imageDigest = "sha256:0dee5f8302fea4517e63e31819db96e8f1382f8e4046a660de975581bf3eeea2";
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
-          sha256 = "";
+          sha256 = "sha256-B1KUPH9C4+yx99u7LLR95FYDNn+n5QurGQF61IAb6iA=";
         };
         base-image-testnet = dockerTools'.pullImage {
           finalImageTag = "testnet-v25.0.0";
@@ -101,7 +101,7 @@
           tag = "nix";
           fromImage = base-image-mainnet;
           inherit copyToRoot;
-          # config.Entrypoint = ["${start external-node-mainnet}/bin/start.sh"];
+          config.Entrypoint = ["${start external-node-mainnet}/bin/start.sh"];
         };
         packages.testnet = dockerTools.buildImage {
           name = "testnet";
