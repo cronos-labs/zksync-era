@@ -34,6 +34,7 @@ mod vm_runner;
 mod wallets;
 
 mod da_client;
+mod gcloud_encrypted_seed;
 
 pub trait FromEnv: Sized {
     fn from_env() -> anyhow::Result<Self>;

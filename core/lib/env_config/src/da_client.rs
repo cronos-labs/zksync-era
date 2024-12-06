@@ -8,7 +8,7 @@ use zksync_config::configs::{
     secrets::DataAvailabilitySecrets,
 };
 
-use crate::{envy_load, FromEnv};
+use crate::{envy_load, gcloud_encrypted_seed::retrieve_seed_from_gcloud, FromEnv};
 
 impl FromEnv for DAClientConfig {
     fn from_env() -> anyhow::Result<Self> {
@@ -30,11 +30,31 @@ impl FromEnv for DataAvailabilitySecrets {
         let client_tag = std::env::var("DA_CLIENT")?;
         let secrets = match client_tag.as_str() {
             AVAIL_CLIENT_CONFIG_NAME => {
+                let from_gcs = if let Some(secrets_from_gcs_tag) = env::var("DA_SECRETS_FROM_GCS").ok() {
+                    secrets_from_gcs_tag == "true"
+                } else {
+                    false
+                };
+
+                let _seed = match from_gcs {
+                    true => {
+                       let gcs_bucket_name = std::env::var("DA_SECRETS_GCS_BUCKET_NAME")
+                       .ok()
+                       .expect("Failed to get DA client secrets from GCS bucket");
+                       let decrypt_key_name = std::env::var("DA_SECRETS_KMS_DECRYPT_KEY_NAME")
+                       .ok()
+                       .expect("Failed to get DA client secrets KMS decrypt key");
+        
+                       Some(retrieve_seed_from_gcloud(decrypt_key_name, gcs_bucket_name))
+                    },
+                    false => None,
+                };
+
                 let seed_phrase = env::var("DA_SECRETS_SEED_PHRASE")
                     .ok()
                     .map(|s| s.parse())
                     .transpose()?;
-                Self::Avail(AvailSecrets { seed_phrase })
+                Self::Avail(AvailSecrets { seed_phrase: seed_phrase, private_key:  _seed})
             }
             _ => anyhow::bail!("Unknown DA client name: {}", client_tag),
         };

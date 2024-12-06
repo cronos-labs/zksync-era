@@ -11,7 +11,7 @@ use parity_scale_codec::{Compact, Decode, Encode};
 use scale_encode::EncodeAsFields;
 use subxt_signer::{
     bip39::Mnemonic,
-    sr25519::{Keypair, Signature},
+    sr25519::{Keypair, Seed, Signature},
 };
 
 use crate::avail::client::to_non_retriable_da_error;
@@ -44,6 +44,11 @@ impl RawAvailClient {
         let mnemonic = Mnemonic::parse(seed)?;
         let keypair = Keypair::from_phrase(&mnemonic, None)?;
 
+        Ok(Self { app_id, keypair })
+    }
+
+    pub(crate) async fn new_with_gcs_seed(app_id: u32, seed: Seed) -> anyhow::Result<Self> {
+        let keypair = Keypair::from_seed(seed)?;
         Ok(Self { app_id, keypair })
     }
 

@@ -13,4 +13,5 @@ pub struct AvailConfig {
 #[derive(Clone, Debug, PartialEq)]
 pub struct AvailSecrets {
     pub seed_phrase: Option<SeedPhrase>,
+    pub private_key: Option<String>,
 }
