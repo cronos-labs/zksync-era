@@ -10,6 +10,14 @@ pub struct TxSinkConfig {
 
 impl TxSinkConfig {
     pub fn deny_list(&self) -> Option<HashSet<Address>> {
+        // Return deny list is not set or empty
+        if self.deny_list.is_none() || self.deny_list.as_ref().unwrap().is_empty() {
+            return None;
+        }
+
+        // Parse deny list from a string and return it as a set of addresses
+        // Example: "0x1,0x2,0x3" -> { Address::from_str("0x1").unwrap(), Address::from_str("0x2").unwrap(), Address::from_str("0x3").unwrap() }
+        // Note: This assumes that the addresses are separated by commas and are in valid format.
         self.deny_list.as_ref().map(|list| {
             list.split(',')
                 .map(|element| Address::from_str(element).unwrap())
