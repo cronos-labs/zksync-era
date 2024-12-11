@@ -108,6 +108,7 @@ eth:
     max_aggregated_tx_gas: 15000000
     max_acceptable_priority_fee_in_gwei: 100000000000
     pubdata_sending_mode: BLOBS
+    signing_mode: PRIVATE_KEY
     max_acceptable_base_fee_in_wei: 100000000000
   gas_adjuster:
     default_priority_fee_per_gas: 1000000000
@@ -383,3 +384,5 @@ consensus:
   public_addr: "127.0.0.1:3054"
   max_payload_size: 2500000
   gossip_dynamic_inbound_limit: 100
+tx_sink:
+  deny_list: ""
