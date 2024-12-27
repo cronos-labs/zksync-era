@@ -99,29 +99,37 @@
               fi
             '';
           };
-        copyToRoot = buildEnv {
-          name = "image-root";
-          paths = [
-            bashInteractive
-            coreutils
-            dockerTools.caCertificates
-            entrypoint
-            generateSecrets
-          ];
-        };
       in {
         packages.mainnet = dockerTools.buildImage {
           name = "mainnet";
           tag = "nix";
           fromImage = base-image-mainnet;
-          inherit copyToRoot;
+          copyToRoot = buildEnv {
+            name = "image-root";
+            paths = [
+              bashInteractive
+              coreutils
+              dockerTools.caCertificates
+              "${entrypoint external-node-mainnet}"
+              "${generateSecrets external-node-mainnet}"
+            ];
+          };
           config.Entrypoint = ["/usr/bin/entrypoint.sh"];
         };
         packages.testnet = dockerTools.buildImage {
           name = "testnet";
           tag = "nix";
           fromImage = base-image-testnet;
-          inherit copyToRoot;
+          copyToRoot = buildEnv {
+            name = "image-root";
+            paths = [
+              bashInteractive
+              coreutils
+              dockerTools.caCertificates
+              "${entrypoint external-node-testnet}"
+              "${generateSecrets external-node-testnet}"
+            ];
+          };
           config.Entrypoint = ["/usr/bin/entrypoint.sh"];
         };
       });
