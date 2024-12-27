@@ -76,15 +76,27 @@
           src = inputs.zksync-era-testnet + /.;
           version = "dummy";
         };
-        start = bin:
+        entrypoint = bin:
           writeTextFile {
-            destination = "/bin/start.sh";
+            destination = "/usr/bin/entrypoint.sh";
             executable = true;
-            name = "start.sh";
+            name = "entrypoint.sh";
             text = ''
               #!${bash}/bin/bash
               ${sqlx-cli}/bin/sqlx database setup
               exec ${bin}/bin/zksync_external_node "$@"
+            '';
+          };
+        generateSecrets = bin:
+          writeTextFile {
+            destination = "/configs/generate_secrets.sh";
+            executable = true;
+            name = "generate_secrets.sh";
+            text = ''
+              #!${bash}/bin/bash
+              if [ ! -s $1 ]; then
+                 ${bin}/bin/zksync_external_node generate-secrets > $1
+              fi
             '';
           };
         copyToRoot = buildEnv {
@@ -93,6 +105,8 @@
             bashInteractive
             coreutils
             dockerTools.caCertificates
+            entrypoint
+            generateSecrets
           ];
         };
       in {
@@ -101,14 +115,14 @@
           tag = "nix";
           fromImage = base-image-mainnet;
           inherit copyToRoot;
-          config.Entrypoint = ["${start external-node-mainnet}/bin/start.sh"];
+          config.Entrypoint = ["/usr/bin/entrypoint.sh"];
         };
         packages.testnet = dockerTools.buildImage {
           name = "testnet";
           tag = "nix";
           fromImage = base-image-testnet;
           inherit copyToRoot;
-          config.Entrypoint = ["${start external-node-testnet}/bin/start.sh"];
+          config.Entrypoint = ["/usr/bin/entrypoint.sh"];
         };
       });
 }
