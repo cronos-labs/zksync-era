@@ -33,7 +33,7 @@ jobs:
         nix_conf: |
           extra-platforms = aarch64-linux
           extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
-    - uses: DeterminateSystems/magic-nix-cache-action@v2
+    # - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
           -- --gc-roots-dir gcroot
@@ -73,7 +73,7 @@ jobs:
         nix_conf: |
           extra-platforms = aarch64-linux
           extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
-    - uses: DeterminateSystems/magic-nix-cache-action@v2
+    # - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
           -- --gc-roots-dir gcroot
@@ -111,7 +111,7 @@ jobs:
       with:
         nix_conf: |
           extra-sandbox-paths = /etc/docker/config.json=/home/runner/.docker/config.json
-    - uses: DeterminateSystems/magic-nix-cache-action@v2
+    # - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: >
           nix run github:nix-community/nix-eval-jobs
           -- --gc-roots-dir gcroot
