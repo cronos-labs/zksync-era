@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  MAINNET_VERSION: v25.0.0
-  TESTNET_VERSION: v25.0.0
+  MAINNET_VERSION: v25.0.0-20250122
+  TESTNET_VERSION: v25.0.0-20250122
 
 jobs:
   nix-build-aarch64-mainnet:
