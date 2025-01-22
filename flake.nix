@@ -3,8 +3,8 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
-  inputs.zksync-era-mainnet.url = "github:matter-labs/zksync-era/core-v25.0.0";
-  inputs.zksync-era-testnet.url = "github:matter-labs/zksync-era/core-v25.0.0";
+  inputs.zksync-era-mainnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
+  inputs.zksync-era-testnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
 
   inputs.zksync-era-mainnet.flake = false;
   inputs.zksync-era-testnet.flake = false;
@@ -53,6 +53,7 @@
             lockFile = inputs.zksync-era-mainnet + /Cargo.lock;
             outputHashes = {
               "zksync_vm2-0.2.1" = "sha256-fH8w6MiL11BIW55Hs6kqxWJKDOkr7Skr7wXQCk+x48U=";
+              "google-cloud-auth-0.16.0" = "sha256-UuVyR/JRxVvUl83BSBi0aK+Pk0hHGyIwG7VD/nn5YUM=";
             };
           };
           doCheck = false;
@@ -100,6 +101,7 @@
             '';
           };
       in {
+        packages.external-node-mainnet = external-node-mainnet;
         packages.mainnet = dockerTools.buildImage {
           name = "mainnet";
           tag = "nix";
