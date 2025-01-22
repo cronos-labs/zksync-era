@@ -6,9 +6,6 @@
   inputs.zksync-era-mainnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
   inputs.zksync-era-testnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
 
-  inputs.zksync-era-mainnet.flake = false;
-  inputs.zksync-era-testnet.flake = false;
-
   outputs = {
     flake-utils,
     nixpkgs,
@@ -23,14 +20,6 @@
       };
     in
       with pkgs; let
-        rustPlatform-mainnet = makeRustPlatform {
-          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era-mainnet + /rust-toolchain);
-          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-mainnet + /rust-toolchain);
-        };
-        rustPlatform-testnet = makeRustPlatform {
-          cargo = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
-          rustc = rust-bin.fromRustupToolchainFile (inputs.zksync-era-testnet + /rust-toolchain);
-        };
         dockerTools' = dockerTools.override {
           skopeo = pkgs.writeScriptBin "skopeo" ''exec ${skopeo}/bin/skopeo "$@" --authfile=/etc/docker/config.json'';
         };
@@ -46,37 +35,8 @@
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
           sha256 = "sha256-8CShbfqjt9QKuhLXeynDEfYlEluLQo7M+W15Vpq5yz8=";
         };
-        external-node-mainnet = rustPlatform-mainnet.buildRustPackage.override {stdenv = clangStdenv;} {
-          buildInputs = [openssl];
-          cargoBuildFlags = "--bin zksync_external_node";
-          cargoLock = {
-            lockFile = inputs.zksync-era-mainnet + /Cargo.lock;
-            outputHashes = {
-              "zksync_vm2-0.2.1" = "sha256-fH8w6MiL11BIW55Hs6kqxWJKDOkr7Skr7wXQCk+x48U=";
-              "google-cloud-auth-0.16.0" = "sha256-UuVyR/JRxVvUl83BSBi0aK+Pk0hHGyIwG7VD/nn5YUM=";
-            };
-          };
-          doCheck = false;
-          nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
-          pname = "external-node";
-          src = inputs.zksync-era-mainnet + /.;
-          version = "dummy";
-        };
-        external-node-testnet = rustPlatform-testnet.buildRustPackage.override {stdenv = clangStdenv;} {
-          buildInputs = [openssl];
-          cargoBuildFlags = "--bin zksync_external_node";
-          cargoLock = {
-            lockFile = inputs.zksync-era-testnet + /Cargo.lock;
-            outputHashes = {
-              "zksync_vm2-0.2.1" = "sha256-fH8w6MiL11BIW55Hs6kqxWJKDOkr7Skr7wXQCk+x48U=";
-            };
-          };
-          doCheck = false;
-          nativeBuildInputs = [pkg-config rustPlatform.bindgenHook];
-          pname = "external-node";
-          src = inputs.zksync-era-testnet + /.;
-          version = "dummy";
-        };
+        external-node-mainnet = inputs.zksync-era-mainnet.packages.${system}.zksync.external_node;
+        external-node-testnet = inputs.zksync-era-testnet.packages.${system}.zksync.external_node;
         entrypoint = bin:
           writeTextFile {
             destination = "/usr/bin/entrypoint.sh";
@@ -102,6 +62,7 @@
           };
       in {
         packages.external-node-mainnet = external-node-mainnet;
+        packages.external-node-testnet = external-node-testnet;
         packages.mainnet = dockerTools.buildImage {
           name = "mainnet";
           tag = "nix";
