@@ -3,8 +3,8 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
 
-  inputs.zksync-era-mainnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
-  inputs.zksync-era-testnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
+  inputs.cronos-zkevm-mainnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
+  inputs.cronos-zkevm-testnet.url = "github:cronos-labs/cronos-zkevm/cronos_core-v25.0.0";
 
   outputs = {
     flake-utils,
@@ -35,8 +35,8 @@
           imageName = "ghcr.io/cronos-labs/zkevm-base-image";
           sha256 = "sha256-8CShbfqjt9QKuhLXeynDEfYlEluLQo7M+W15Vpq5yz8=";
         };
-        external-node-mainnet = inputs.zksync-era-mainnet.packages.${system}.zksync.external_node;
-        external-node-testnet = inputs.zksync-era-testnet.packages.${system}.zksync.external_node;
+        external-node-mainnet = inputs.cronos-zkevm-mainnet.packages.${system}.zksync.external_node;
+        external-node-testnet = inputs.cronos-zkevm-testnet.packages.${system}.zksync.external_node;
         entrypoint = bin:
           writeTextFile {
             destination = "/usr/bin/entrypoint.sh";
