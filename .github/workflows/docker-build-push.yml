@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io/cronos-labs
   IMAGE_NAME: external-node
-  IMAGE_TAG: mainnet-v25.0.0-20240123
+  IMAGE_TAG: mainnet-v25.0.0-20250123
   BRANCH_NAME: cronos_core-v25.0.0
 
 jobs:
