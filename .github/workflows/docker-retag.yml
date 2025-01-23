@@ -1,0 +1,30 @@
+name: Docker Retag and Push
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io/cronos-labs
+  IMAGE_NAME: external-node
+  SOURCE_TAG: mainnet-v25.0.0-20240123
+  TARGET_TAG: mainnet-v25.0.0-20250123
+
+jobs:
+  retag-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Pull, retag and push image
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.SOURCE_TAG }}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.SOURCE_TAG }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }}
