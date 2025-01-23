@@ -1,6 +1,9 @@
 name: Docker Retag and Push
 
 on:
+  push:
+    branches:
+      - docker
   workflow_dispatch:
 
 env:
