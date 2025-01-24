@@ -14,7 +14,18 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-latest
+            platform: linux/amd64
+            suffix: ""
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+            platform: linux/arm64
+            suffix: "-arm64"
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
       packages: write
@@ -57,8 +68,8 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          platforms: ${{ matrix.platform }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}${{ matrix.suffix }}
           file: Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
