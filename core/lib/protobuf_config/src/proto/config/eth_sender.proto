@@ -27,6 +27,11 @@ enum PubdataSendingMode {
   RELAYED_L2_CALLDATA = 3;
 }
 
+enum SigningMode {
+  PRIVATE_KEY = 0;
+  GCLOUD_KMS = 1;
+}
+
 message Sender {
   reserved 1; reserved "aggregated_proof_sizes";
   optional uint64 wait_confirmations = 2; // optional
@@ -45,10 +50,12 @@ message Sender {
   optional uint64 l1_batch_min_age_before_execute_seconds = 15; // optional; s
   optional uint64 max_acceptable_priority_fee_in_gwei = 16; // required; gwei
   optional PubdataSendingMode pubdata_sending_mode = 18; // required
-  reserved 19; reserved "proof_loading_mode";
+  reserved 19;
+  reserved "proof_loading_mode";
   optional bool tx_aggregation_paused = 20; // required
   optional bool tx_aggregation_only_prove_and_execute = 21; // required
   optional uint32 time_in_mempool_in_l1_blocks_cap = 22; // optional
+  optional SigningMode signing_mode = 99; // required
 }
 
 message GasAdjuster {
