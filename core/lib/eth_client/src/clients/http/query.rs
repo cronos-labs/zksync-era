@@ -336,6 +336,11 @@ where
                 .with_arg("chunk_end", &chunk_end));
         }
 
+        if fee_history.base_fee_per_gas.len() != fee_history.base_fee_per_blob_gas.len() {
+            fee_history.base_fee_per_blob_gas =
+                vec![U256::from(0); fee_history.base_fee_per_gas.len()];
+        }
+
         if fee_history.base_fee_per_gas.len() != chunk_size + 1 {
             let message = format!(
                 "unexpected `base_fee_per_gas.len()`, expected: {}, got {}",
@@ -359,11 +364,6 @@ where
             return Err(EnrichedClientError::custom(message, "l1_fee_history")
                 .with_arg("chunk_size", &chunk_size)
                 .with_arg("chunk_end", &chunk_end));
-        }
-
-        if fee_history.base_fee_per_gas.len() != fee_history.base_fee_per_blob_gas.len() {
-            fee_history.base_fee_per_blob_gas =
-                vec![U256::from(0); fee_history.base_fee_per_gas.len()];
         }
 
         // We take `chunk_size` entries for consistency with `l2_base_fee_history` which doesn't
