@@ -123,9 +123,8 @@ impl WiringLayer for PKSigningEthClientLayer {
                     (&input.gateway_client, self.gateway_chain_config.as_ref())
                 {
                     if gateway_contracts.gateway_chain_id.0 != 0u64 {
-                        let private_key = self.wallets.operator.private_key();
                         let GatewayEthInterfaceResource(gateway_client) = client;
-                        let signing_client_for_blobs = PKSigningClient::new_raw(
+                        let signing_client_for_gateway = PKSigningClient::new_raw(
                             private_key.clone(),
                             gateway_contracts.diamond_proxy_addr,
                             gas_adjuster_config.default_priority_fee_per_gas,
@@ -133,7 +132,7 @@ impl WiringLayer for PKSigningEthClientLayer {
                             gateway_client.clone(),
                         );
                         Some(BoundEthInterfaceForL2Resource(Box::new(
-                            signing_client_for_blobs,
+                            signing_client_for_gateway,
                         )))
                     } else {
                         None
@@ -187,7 +186,7 @@ impl WiringLayer for PKSigningEthClientLayer {
                 {
                     if gateway_contracts.gateway_chain_id.0 != 0u64 {
                         let GatewayEthInterfaceResource(gateway_client) = client;
-                        let signing_client_for_blobs = GKMSSigningClient::new_raw(
+                        let signing_client_for_gateway = GKMSSigningClient::new_raw(
                             gateway_contracts.diamond_proxy_addr,
                             gas_adjuster_config.default_priority_fee_per_gas,
                             gateway_contracts.gateway_chain_id,
@@ -199,7 +198,7 @@ impl WiringLayer for PKSigningEthClientLayer {
                         .await;
 
                         Some(BoundEthInterfaceForL2Resource(Box::new(
-                            signing_client_for_blobs,
+                            signing_client_for_gateway,
                         )))
                     } else {
                         None
