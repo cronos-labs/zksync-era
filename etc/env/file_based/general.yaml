@@ -105,6 +105,7 @@ eth:
     max_acceptable_priority_fee_in_gwei: 100000000000 # typo: value is in wei (100 gwei)
     pubdata_sending_mode: BLOBS
     is_verifier_pre_fflonk: true
+    signing_mode: PRIVATE_KEY
   gas_adjuster:
     default_priority_fee_per_gas: 1000000000
     max_base_fee_samples: 100
@@ -386,3 +387,5 @@ consensus:
   public_addr: "127.0.0.1:3054"
   max_payload_size: 2500000
   gossip_dynamic_inbound_limit: 100
+tx_sink:
+  deny_list: ""
