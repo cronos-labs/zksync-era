@@ -24,7 +24,7 @@ craneLib.buildPackage (coreCommonArgs // {
   inherit cargoExtraArgs;
 
   buildInputs = coreCommonArgs.buildInputs ++ [
-    zkstack
+    # zkstack
     foundry-zksync
   ];
 
