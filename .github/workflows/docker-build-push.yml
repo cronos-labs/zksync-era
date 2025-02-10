@@ -9,8 +9,8 @@ on:
 env:
   REGISTRY: ghcr.io/cronos-labs
   IMAGE_NAME: external-node
-  IMAGE_TAG: mainnet-v25.0.0-20250123
-  BRANCH_NAME: cronos_core-v25.0.0
+  IMAGE_TAG: v26.2.1
+  BRANCH_NAME: cronos_core-v26.2.1
 
 jobs:
   build-and-push:
@@ -36,7 +36,6 @@ jobs:
         run: |
           mkdir -p /tmp/build-files
           cp Dockerfile /tmp/build-files/
-          cp generate_secrets.sh /tmp/build-files/
 
       - name: Checkout target branch
         uses: actions/checkout@v4
@@ -46,7 +45,8 @@ jobs:
       - name: Restore build files
         run: |
           cp /tmp/build-files/Dockerfile ./
-          cp /tmp/build-files/generate_secrets.sh ./
+          mkdir -p backups
+          cp docs/src/guides/external-node/docker-compose-examples/configs/generate_secrets.sh backups/generate_secrets.sh
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -66,6 +66,8 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-${{ matrix.arch }}
           file: Dockerfile
+          build-args: |
+            BASE_IMAGE_TAG=${{ env.IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
